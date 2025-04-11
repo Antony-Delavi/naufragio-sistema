@@ -8,7 +8,10 @@ const ProdutoSchema = new mongoose.Schema({
   estilo: String,
   tamanho: String,
   categoria: String,
-  disponivel: Boolean,
+  disponivel: {
+    type: Boolean,
+    default: true
+},
   dataCadastro: {
     type: String,
     default: () => {

@@ -42,7 +42,7 @@ router.get('/buscarvendasmes/:mes', async (req, res) => {
   });
   
 
-router.post('/criarvenda', async (req, res) => {
+router.post('/vendaSimples', async (req, res) => {
     const novaVenda = new Venda(req.body);
     await novaVenda.save();
     res.status(201).send('Venda processada!');
