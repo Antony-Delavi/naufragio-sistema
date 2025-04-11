@@ -1,0 +1,96 @@
+const express = require('express');
+const router = express.Router();
+const Produto = require('../models/produtos');
+
+router.get('/buscar', async (req, res) => {
+    const produtos = await Produto.find();
+    res.json(produtos);
+});
+
+router.get('/buscarnome/:nome', async (req, res) => {
+    try {
+      const nome = req.params.nomeProduto;
+      const produto = await Produto.findOne({ nome });
+  
+      if (!produto) {
+        return res.status(404).send('Produto não encontrado');
+      }
+  
+      res.json({
+        id: produto._id,
+        nome: produto.nomeProduto,
+        cores: produto.cores,
+        preco: produto.preco,
+        categoria: produto.categoria
+      });
+    } catch (err) {
+      res.status(500).send('Erro ao buscar produto');
+    }
+  });
+
+router.get('/buscarcatg/:categoria', async (req, res) => {
+    const categoria = req.params.categoria;
+  
+    try {
+      const produtos = await Produto.find({
+        categoria: new RegExp(categoria, 'i')
+      });
+  
+      if (produtos.length === 0) {
+        return res.status(404).send('Nenhum produto encontrado para essa categoria');
+      }
+  
+      res.json(produtos);
+    } catch (err) {
+      console.error('Erro ao buscar produtos:', err);
+      res.status(500).send('Erro ao buscar produtos por categoria');
+    }
+});
+
+
+router.post('/criar', async (req, res) => {
+    const novoProduto = new Produto(req.body);
+    await novoProduto.save();
+    res.status(201).send('Produto criado!');
+});
+
+router.delete('/deletar/:id', async (req, res) => {
+    try{
+        const id = req.params.id;
+        const produtoDeletado = await Produto.findByIdAndDelete(id);
+
+        if(!produtoDeletado) {
+            return res.status(404).send('Produto não encontrado.');
+        }
+
+        res.send('Produto deletado com sucesso!');
+    } catch (err) {
+        res.status(500).send('Erro ao deletar o produto. ')
+    }
+});
+
+router.patch('/alterarvalor/:nome', async (req, res) => {
+  const nomeProduto = req.params.nome;
+  const { preco } = req.body;
+
+  try {
+    const produto = await Produto.findOneAndUpdate(
+      { nomeProduto },                  
+      { $set: { preco } },              
+      { new: true }                    
+    );
+    
+    if (!produto) {
+      return res.status(404).send('Produto não encontrado');
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao atualizar o valor');
+  }
+});
+
+
+
+module.exports = router;
+
