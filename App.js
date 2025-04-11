@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
 const https = require('https');
-const SELF_URL = 'https://SEU-APP-NO-RENDER.onrender.com';
+const SELF_URL = 'https://naufragio-sistema.onrender.com';
 
 const produtoRoutes = require('./routes/produtos');
 const vendasRoutes = require('./routes/vendas')
