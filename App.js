@@ -19,7 +19,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use('/produtos', produtoRoutes);
 app.use('/vendas', vendasRoutes)
-app.use('/vendas', criarVenda)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
@@ -32,4 +31,4 @@ setInterval(() => {
   }).on('error', (err) => {
     console.error('[KeepAlive] Erro ao enviar ping:', err.message);
   });
-}, 60 * 1000);
+}, 3 * 60 * 1000);

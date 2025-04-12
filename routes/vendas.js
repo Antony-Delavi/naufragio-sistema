@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const Produto = require('../models/produtos');
 const Venda = require('../models/vendas');
 
 router.get('/buscarvendas', async (req, res) => {
-    const Vendas = await Vendas.find();
-    res.json(Venda);
+    const vendas = await Venda.find();
+    res.json(vendas)
 });
 
 router.get('/buscarvendas/:dia', async (req, res) => {
@@ -39,13 +40,43 @@ router.get('/buscarvendasmes/:mes', async (req, res) => {
       console.error('Erro ao buscar vendas por mês:', err);
       res.status(500).send('Erro ao buscar vendas');
     }
-  });
+});
   
-
-router.post('/vendaSimples', async (req, res) => {
-    const novaVenda = new Venda(req.body);
-    await novaVenda.save();
-    res.status(201).send('Venda processada!');
+router.post('/criar', async (req, res) => {
+    const { nomeProduto, desconto } = req.body;
+  
+    try {
+      // Busca o produto disponível pelo nome
+      const produto = await Produto.findOne({ nomeProduto, disponivel: true });
+  
+      if (!produto) {
+        return res.status(404).json({ erro: 'Produto não encontrado ou já foi vendido.' });
+      }
+  
+      // Cria a venda com os dados do produto
+      const novaVenda = new Venda({
+        nomeProduto: produto.nomeProduto,
+        valorProduto: produto.preco,
+        desconto: Number(desconto),
+        categoria: produto.categoria,
+        dataCadastro: new Date().toISOString().split('T')[0],
+        mesCadastro: new Date().toISOString().slice(5, 7) + '.' + new Date().toISOString().slice(2, 4)
+      });
+  
+      await novaVenda.save();
+  
+      // Marca o produto como indisponível
+      produto.disponivel = false;
+      await produto.save();
+  
+      res.status(201).json({
+        mensagem: 'Venda registrada com sucesso!',
+        venda: novaVenda
+      });
+    } catch (error) {
+      console.error('Erro ao criar venda:', error);
+      res.status(500).json({ erro: 'Erro interno ao registrar a venda.' });
+    }
 });
 
 module.exports = router;
