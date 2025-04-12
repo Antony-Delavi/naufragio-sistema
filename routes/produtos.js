@@ -1,96 +1,146 @@
-const express = require('express');
-const router = express.Router();
-const Produto = require('../models/produtos');
+document.addEventListener("DOMContentLoaded", () => {
+  const apiUrl = 'https://naufragio-sistema.onrender.com/produtos'; // Substitua pela URL correta da sua API
 
-router.get('/buscar', async (req, res) => {
-    const produtos = await Produto.find();
-    res.json(produtos);
-});
+  // Função para carregar os produtos da API
+  async function carregarProdutos() {
+      try {
+          const response = await fetch(`${apiUrl}/buscar`);
 
-router.get('/buscarnome/:nome', async (req, res) => {
-    try {
-      const nome = req.params.nomeProduto;
-      const produto = await Produto.findOne({ nome });
-  
-      if (!produto) {
-        return res.status(404).send('Produto não encontrado');
+          // Verificar se a resposta foi bem-sucedida (status 200-299)
+          if (!response.ok) {
+              throw new Error(`Erro ao buscar produtos: ${response.statusText}`);
+          }
+
+          const produtos = await response.json();
+
+          // Verifique os dados no console
+          console.log("Produtos recebidos:", produtos);
+
+          // Selecionando os containers para produtos disponíveis e não disponíveis
+          const containerDisponiveis = document.getElementById('produtos-disponiveis');
+          const containerIndisponiveis = document.getElementById('produtos-indisponiveis');
+
+          // Limpando os containers antes de adicionar os produtos
+          containerDisponiveis.innerHTML = '';
+          containerIndisponiveis.innerHTML = '';
+
+          // Separando os produtos disponíveis dos não disponíveis
+          const disponiveis = produtos.filter(produto => produto.disponivel);
+          const indisponiveis = produtos.filter(produto => !produto.disponivel);
+
+          // Exibindo produtos disponíveis
+          disponiveis.forEach(produto => {
+              const produtoCard = criarCardProduto(produto);
+              containerDisponiveis.appendChild(produtoCard);
+          });
+
+          // Exibindo produtos indisponíveis
+          indisponiveis.forEach(produto => {
+              const produtoCard = criarCardProduto(produto);
+              containerIndisponiveis.appendChild(produtoCard);
+          });
+
+      } catch (error) {
+          console.error('Erro ao carregar produtos:', error);
+          alert('Erro ao carregar os produtos, verifique o console para mais detalhes.');
       }
-  
-      res.json({
-        id: produto._id,
-        nome: produto.nomeProduto,
-        cores: produto.cores,
-        preco: produto.preco,
-        categoria: produto.categoria
-      });
-    } catch (err) {
-      res.status(500).send('Erro ao buscar produto');
-    }
-  });
+  }
 
-router.get('/buscarcatg/:categoria', async (req, res) => {
-    const categoria = req.params.categoria;
-  
-    try {
-      const produtos = await Produto.find({
-        categoria: new RegExp(categoria, 'i')
+  // Função para criar o card do produto
+  function criarCardProduto(produto) {
+      const card = document.createElement('div');
+      card.classList.add('card', 'mb-3');
+
+      // Corpo do card com nome, categoria, preço e disponibilidade
+      const cardBody = document.createElement('div');
+      cardBody.classList.add('card-body');
+      card.appendChild(cardBody);
+
+      const nome = document.createElement('h5');
+      nome.classList.add('card-title');
+      nome.textContent = produto.nomeProduto;
+      cardBody.appendChild(nome);
+
+      const categoria = document.createElement('p');
+      categoria.classList.add('card-text');
+      categoria.textContent = `Categoria: ${produto.categoria}`;
+      cardBody.appendChild(categoria);
+
+      const preco = document.createElement('p');
+      preco.classList.add('card-text');
+      preco.textContent = `Preço: R$ ${produto.preco.toFixed(2)}`;
+      cardBody.appendChild(preco);
+
+      const disponibilidade = document.createElement('p');
+      disponibilidade.classList.add('card-text');
+      disponibilidade.textContent = produto.disponivel ? 'Disponível' : 'Indisponível';
+      cardBody.appendChild(disponibilidade);
+
+      // Botão de expandir para mostrar mais informações
+      const btnExpandir = document.createElement('button');
+      btnExpandir.classList.add('btn', 'btn-link');
+      btnExpandir.textContent = 'Expandir';
+      btnExpandir.addEventListener('click', () => {
+          const detalhes = document.getElementById(`detalhes-${produto._id}`);
+          detalhes.classList.toggle('d-none');
       });
-  
-      if (produtos.length === 0) {
-        return res.status(404).send('Nenhum produto encontrado para essa categoria');
+      cardBody.appendChild(btnExpandir);
+
+      // Detalhes adicionais
+      const detalhes = document.createElement('div');
+      detalhes.id = `detalhes-${produto._id}`;
+      detalhes.classList.add('d-none', 'mt-3');
+
+      const cores = document.createElement('p');
+      cores.textContent = `Cores disponíveis: ${produto.cores}`;
+      detalhes.appendChild(cores);
+
+      const marca = document.createElement('p');
+      marca.textContent = `Marca: ${produto.marca}`;
+      detalhes.appendChild(marca);
+
+      const estilo = document.createElement('p');
+      estilo.textContent = `Estilo: ${produto.estilo}`;
+      detalhes.appendChild(estilo);
+
+      const tamanho = document.createElement('p');
+      tamanho.textContent = `Tamanho: ${produto.tamanho}`;
+      detalhes.appendChild(tamanho);
+
+      card.appendChild(detalhes);
+
+      // Botão de deletar produto
+      const btnDeletar = document.createElement('button');
+      btnDeletar.classList.add('btn', 'btn-danger', 'mt-3');
+      btnDeletar.textContent = 'Deletar Produto';
+      btnDeletar.addEventListener('click', () => {
+          deletarProduto(produto._id);
+      });
+      cardBody.appendChild(btnDeletar);
+
+      return card;
+  }
+
+  // Função para deletar o produto
+  async function deletarProduto(id) {
+      try {
+          const response = await fetch(`${apiUrl}/deletar/${id}`, {
+              method: 'DELETE'
+          });
+
+          if (response.ok) {
+              alert('Produto deletado com sucesso!');
+              // Atualize a lista de produtos após deletar
+              carregarProdutos();
+          } else {
+              alert('Erro ao deletar o produto.');
+          }
+      } catch (error) {
+          console.error('Erro ao deletar o produto:', error);
+          alert('Erro ao deletar o produto.');
       }
-  
-      res.json(produtos);
-    } catch (err) {
-      console.error('Erro ao buscar produtos:', err);
-      res.status(500).send('Erro ao buscar produtos por categoria');
-    }
-});
-
-
-router.post('/criar', async (req, res) => {
-    const novoProduto = new Produto(req.body);
-    await novoProduto.save();
-    res.status(201).send('Produto criado!');
-});
-
-router.delete('/deletar/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const produto = await Produto.findByIdAndDelete(id);
-
-    if (!produto) {
-      return res.status(404).json({ message: 'Produto não encontrado.' });
-    }
-
-    res.status(200).json({ message: 'Produto deletado com sucesso!' });
-  } catch (error) {
-    console.error('Erro ao deletar o produto:', error);
-    res.status(500).json({ message: 'Erro interno ao deletar o produto.' });
   }
+
+  // Carregar os produtos ao carregar a página
+  carregarProdutos();
 });
-router.patch('/alterarvalor/:nome', async (req, res) => {
-  const nomeProduto = req.params.nome;
-  const { preco } = req.body;
-
-  try {
-    const produto = await Produto.findOneAndUpdate(
-      { nomeProduto },                  
-      { $set: { preco } },              
-      { new: true }                    
-    );
-    
-    if (!produto) {
-      return res.status(404).send('Produto não encontrado');
-    }
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao atualizar o valor');
-  }
-});
-
-
-
-module.exports = router;
-
