@@ -55,20 +55,20 @@ router.post('/criar', async (req, res) => {
 });
 
 router.delete('/deletar/:id', async (req, res) => {
-    try{
-        const id = req.params.id;
-        const produtoDeletado = await Produto.findByIdAndDelete(id);
+  try {
+    const { id } = req.params;
+    const produto = await Produto.findByIdAndDelete(id);
 
-        if(!produtoDeletado) {
-            return res.status(404).send('Produto não encontrado.');
-        }
-
-        res.send('Produto deletado com sucesso!');
-    } catch (err) {
-        res.status(500).send('Erro ao deletar o produto. ')
+    if (!produto) {
+      return res.status(404).json({ message: 'Produto não encontrado.' });
     }
-});
 
+    res.status(200).json({ message: 'Produto deletado com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao deletar o produto:', error);
+    res.status(500).json({ message: 'Erro interno ao deletar o produto.' });
+  }
+});
 router.patch('/alterarvalor/:nome', async (req, res) => {
   const nomeProduto = req.params.nome;
   const { preco } = req.body;
