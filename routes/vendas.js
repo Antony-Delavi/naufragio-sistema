@@ -9,37 +9,38 @@ router.get('/buscarvendas', async (req, res) => {
 });
 
 router.get('/buscarvendas/:dia', async (req, res) => {
-    const dia = req.params.dia;
-  
-    try {
-      const resultado = await Venda.find({ dataCadastro: dia });
-  
-      if (resultado.length === 0) {
-        return res.status(404).send('Nenhuma venda encontrada para este dia');
-      }
-  
-      res.json(resultado);
-    } catch (err) {
-      console.error('Erro ao buscar vendas:', err);
-      res.status(500).send('Erro ao buscar vendas por data');
+  const dia = req.params.dia;
+
+  try {
+    const resultado = await Venda.find({ dataCadastro: dia });
+
+    if (resultado.length === 0) {
+      return res.status(404).send('Nenhuma venda encontrada para este dia');
     }
+
+    res.json(resultado);
+  } catch (err) {
+    console.error('Erro ao buscar vendas:', err);
+    res.status(500).send('Erro ao buscar vendas por data');
+  }
 });
 
+// Buscar vendas por mês
 router.get('/buscarvendasmes/:mes', async (req, res) => {
-    const mes = req.params.mes; // Ex: "04.25"
-  
-    try {
-      const vendas = await Venda.find({ mesCadastro: mes });
-  
-      if (vendas.length === 0) {
-        return res.status(404).send('Nenhuma venda encontrada para este mês');
-      }
-  
-      res.json(vendas);
-    } catch (err) {
-      console.error('Erro ao buscar vendas por mês:', err);
-      res.status(500).send('Erro ao buscar vendas');
+  const mes = req.params.mes;
+
+  try {
+    const vendas = await Venda.find({ mesCadastro: mes });
+
+    if (vendas.length === 0) {
+      return res.status(404).send('Nenhuma venda encontrada para este mês');
     }
+
+    res.json(vendas);
+  } catch (err) {
+    console.error('Erro ao buscar vendas por mês:', err);
+    res.status(500).send('Erro ao buscar vendas');
+  }
 });
   
 router.post('/criar', async (req, res) => {
@@ -98,6 +99,10 @@ router.get("/relatorio", (req, res) => {
     const hoje = new Date();
     inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1); // Primeiro dia do mês
     fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0); // Último dia do mês
+  } else if (periodo === "ano") {
+    const hoje = new Date();
+    inicio = new Date(hoje.getFullYear(), 0, 1); // Primeiro dia do ano
+    fim = new Date(hoje.getFullYear(), 11, 31); // Último dia do ano
   }
 
   // Buscar as vendas no período
@@ -122,7 +127,5 @@ router.get("/relatorio", (req, res) => {
       res.status(500).json({ erro: "Erro ao buscar vendas" });
     });
 });
-
-
 
 module.exports = router;

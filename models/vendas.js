@@ -6,8 +6,14 @@ const VendaSchema = new mongoose.Schema({
   desconto: Number,
   categoria: String,
   dataCadastro: {
-    type: Date,
-    default: Date.now
+    type: String,
+    default: () => {
+      const data = new Date();
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = String(data.getFullYear()).slice(-2);
+      return `${dia}.${mes}.${ano}`;
+    }
   },
   mesCadastro: {
     type: String,
@@ -17,9 +23,16 @@ const VendaSchema = new mongoose.Schema({
       const ano = String(data.getFullYear()).slice(-2);
       return `${mes}.${ano}`;
     }
+  },
+  anoCadastro: {
+    type: String,
+    default: () => {
+      const data = new Date();
+      return String(data.getFullYear());
+    }
   }
 }, {
   collection: 'Vendas'
 });
 
-module.exports = mongoose.model('Venda', VendaSchema);
+module.exports = mongoose.model('Vendas', VendaSchema);
