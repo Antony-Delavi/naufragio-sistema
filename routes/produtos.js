@@ -49,9 +49,14 @@ router.get('/buscarcatg/:categoria', async (req, res) => {
 
 
 router.post('/criar', async (req, res) => {
+  try {
     const novoProduto = new Produto(req.body);
     await novoProduto.save();
-    res.status(201).send('Produto criado!');
+    res.status(201).json({ message: 'Produto criado!' });
+  } catch (error) {
+    console.error('Erro ao criar produto:', error);
+    res.status(500).json({ erro: 'Erro ao criar produto.' });
+  }
 });
 
 router.delete('/deletar/:id', async (req, res) => {
