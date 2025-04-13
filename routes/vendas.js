@@ -78,69 +78,44 @@ router.post('/criar', async (req, res) => {
       res.status(500).json({ erro: 'Erro interno ao registrar a venda.' });
     }
 });
+  
+app.get('/relatorio', (req, res) => {
+  const periodo = req.query.periodo;
+  let inicio, fim;
 
-router.get('/relatorio', async (req, res) => {
-  try {
-    // Pega os parâmetros de data (inicio e fim) da query string
-    const { inicio, fim } = req.query;
-    // Se as datas 'inicio' e 'fim' forem passadas, usa 'dataCadastro'
-    if (inicio && fim) {
-      const dataInicio = new Date(inicio);
-      const dataFim = new Date(fim);
-
-      if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
-        return res.status(400).json({ erro: 'Datas inválidas.' });
-      }
-
-      // Busca as vendas dentro do intervalo de datas
-      const vendas = await Venda.find({
-        dataCadastro: { $gte: inicio, $lte: fim }
-      });
-
-      // Calculando o total das vendas
-      const totalVendas = vendas.reduce((total, venda) => total + (venda.valorProduto - venda.desconto), 0);
-
-      // Retorna o total e os detalhes das vendas
-      return res.json({
-        totalVendas,
-        vendas: vendas.map(venda => ({
-          nomeProduto: venda.nomeProduto,
-          valorProduto: venda.valorProduto,
-          desconto: venda.desconto,
-          categoria: venda.categoria,
-          dataCadastro: venda.dataCadastro
-        }))
-      });
-    }
-
-    if (inicio && !fim) {
-      const mesInicio = inicio;
-      const vendas = await Venda.find({
-        mesCadastro: mesInicio
-      });
-
-      // Calculando o total das vendas
-      const totalVendas = vendas.reduce((total, venda) => total + (venda.valorProduto - venda.desconto), 0);
-
-      // Retorna o total e os detalhes das vendas
-      return res.json({
-        totalVendas,
-        vendas: vendas.map(venda => ({
-          nomeProduto: venda.nomeProduto,
-          valorProduto: venda.valorProduto,
-          desconto: venda.desconto,
-          categoria: venda.categoria,
-          dataCadastro: venda.dataCadastro
-        }))
-      });
-    }
-
-    return res.status(400).json({ erro: 'Parâmetros de data não fornecidos corretamente.' });
-
-  } catch (err) {
-    console.error('Erro ao gerar relatório de vendas:', err);
-    res.status(500).json({ erro: 'Erro ao gerar o relatório de vendas.' });
+  if (periodo === 'dia') {
+    const hoje = new Date();
+    inicio = new Date(hoje.setHours(0, 0, 0, 0)); // Início do dia
+    fim = new Date(hoje.setHours(23, 59, 59, 999)); // Fim do dia
+  } else if (periodo === 'semana') {
+    const hoje = new Date();
+    const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay())); // Primeiro dia da semana
+    const ultimoDiaSemana = new Date(primeiroDiaSemana);
+    ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6); // Último dia da semana
+    inicio = primeiroDiaSemana;
+    fim = ultimoDiaSemana;
+  } else if (periodo === 'mes') {
+    const hoje = new Date();
+    inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1); // Primeiro dia do mês
+    fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0); // Último dia do mês
   }
+
+  // Buscar as vendas no período
+  Venda.find({
+    dataCadastro: {
+      $gte: inicio.toISOString(),
+      $lte: fim.toISOString()
+    }
+  }).then(vendas => {
+    const totalVendas = vendas.reduce((acc, venda) => acc + (venda.valorProduto - venda.desconto), 0);
+    res.json({
+      vendas,
+      totalVendas
+    });
+  }).catch(err => {
+    res.status(500).json({ erro: 'Erro ao buscar vendas' });
+  });
 });
+
 
 module.exports = router;
