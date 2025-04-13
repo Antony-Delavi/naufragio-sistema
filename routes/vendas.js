@@ -44,40 +44,43 @@ router.get('/buscarvendasmes/:mes', async (req, res) => {
 });
   
 router.post('/criar', async (req, res) => {
-    const { nomeProduto, desconto } = req.body;
-  
-    try {
-      // Busca o produto disponível pelo nome
-      const produto = await Produto.findOne({ nomeProduto, disponivel: true });
-  
-      if (!produto) {
-        return res.status(404).json({ erro: 'Produto não encontrado ou já foi vendido.' });
-      }
-  
-      // Cria a venda com os dados do produto
-      const novaVenda = new Venda({
-        nomeProduto: produto.nomeProduto,
-        valorProduto: produto.preco,
-        desconto: Number(desconto),
-        categoria: produto.categoria,
-        dataCadastro: new Date().toISOString().split('T')[0],
-        mesCadastro: new Date().toISOString().slice(5, 7) + '.' + new Date().toISOString().slice(2, 4)
-      });
-  
-      await novaVenda.save();
-  
-      // Marca o produto como indisponível
-      produto.disponivel = false;
-      await produto.save();
-  
-      res.status(201).json({
-        mensagem: 'Venda registrada com sucesso!',
-        venda: novaVenda
-      });
-    } catch (error) {
-      console.error('Erro ao criar venda:', error);
-      res.status(500).json({ erro: 'Erro interno ao registrar a venda.' });
+  const { nomeProduto, desconto } = req.body;
+
+  try {
+    // Busca o produto disponível pelo nome
+    const produto = await Produto.findOne({ nomeProduto, disponivel: true });
+
+    if (!produto) {
+      return res.status(404).json({ erro: 'Produto não encontrado ou já foi vendido.' });
     }
+
+    // Cria a venda com os dados do produto
+    const novaVenda = new Venda({
+      nomeProduto: produto.nomeProduto,
+      valorProduto: produto.preco,
+      desconto: Number(desconto),
+      categoria: produto.categoria,
+      dataCadastro: new Date().toISOString().split('T')[0], // Formato de data para o campo dataCadastro
+      mesCadastro: new Date().toISOString().slice(5, 7) + '.' + new Date().toISOString().slice(2, 4), // Formato de mês para o campo mesCadastro
+      anoCadastro: new Date().toISOString().slice(0, 4) // Ano completo para o campo anoCadastro
+    });
+
+    // Salva a nova venda no banco de dados
+    await novaVenda.save();
+
+    // Marca o produto como indisponível após a venda
+    produto.disponivel = false;
+    await produto.save();
+
+    // Retorna a resposta com a venda criada
+    res.status(201).json({
+      mensagem: 'Venda registrada com sucesso!',
+      venda: novaVenda
+    });
+  } catch (error) {
+    console.error('Erro ao criar venda:', error);
+    res.status(500).json({ erro: 'Erro interno ao registrar a venda.' });
+  }
 });
 
 router.get("/relatorio", (req, res) => {
