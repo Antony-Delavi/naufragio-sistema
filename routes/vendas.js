@@ -78,8 +78,8 @@ router.post('/criar', async (req, res) => {
       res.status(500).json({ erro: 'Erro interno ao registrar a venda.' });
     }
 });
-  
-app.get('/relatorio', (req, res) => {
+
+router.get('/relatorio', (req, res) => {
   const periodo = req.query.periodo;
   let inicio, fim;
 
