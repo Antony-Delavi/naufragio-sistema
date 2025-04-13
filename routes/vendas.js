@@ -79,4 +79,68 @@ router.post('/criar', async (req, res) => {
     }
 });
 
+router.get('/relatorio', async (req, res) => {
+  try {
+    // Pega os parâmetros de data (inicio e fim) da query string
+    const { inicio, fim } = req.query;
+    // Se as datas 'inicio' e 'fim' forem passadas, usa 'dataCadastro'
+    if (inicio && fim) {
+      const dataInicio = new Date(inicio);
+      const dataFim = new Date(fim);
+
+      if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
+        return res.status(400).json({ erro: 'Datas inválidas.' });
+      }
+
+      // Busca as vendas dentro do intervalo de datas
+      const vendas = await Venda.find({
+        dataCadastro: { $gte: inicio, $lte: fim }
+      });
+
+      // Calculando o total das vendas
+      const totalVendas = vendas.reduce((total, venda) => total + (venda.valorProduto - venda.desconto), 0);
+
+      // Retorna o total e os detalhes das vendas
+      return res.json({
+        totalVendas,
+        vendas: vendas.map(venda => ({
+          nomeProduto: venda.nomeProduto,
+          valorProduto: venda.valorProduto,
+          desconto: venda.desconto,
+          categoria: venda.categoria,
+          dataCadastro: venda.dataCadastro
+        }))
+      });
+    }
+
+    if (inicio && !fim) {
+      const mesInicio = inicio;
+      const vendas = await Venda.find({
+        mesCadastro: mesInicio
+      });
+
+      // Calculando o total das vendas
+      const totalVendas = vendas.reduce((total, venda) => total + (venda.valorProduto - venda.desconto), 0);
+
+      // Retorna o total e os detalhes das vendas
+      return res.json({
+        totalVendas,
+        vendas: vendas.map(venda => ({
+          nomeProduto: venda.nomeProduto,
+          valorProduto: venda.valorProduto,
+          desconto: venda.desconto,
+          categoria: venda.categoria,
+          dataCadastro: venda.dataCadastro
+        }))
+      });
+    }
+
+    return res.status(400).json({ erro: 'Parâmetros de data não fornecidos corretamente.' });
+
+  } catch (err) {
+    console.error('Erro ao gerar relatório de vendas:', err);
+    res.status(500).json({ erro: 'Erro ao gerar o relatório de vendas.' });
+  }
+});
+
 module.exports = router;
