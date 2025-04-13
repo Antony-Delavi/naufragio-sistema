@@ -95,7 +95,41 @@ router.patch('/alterarvalor/:nome', async (req, res) => {
   }
 });
 
+router.patch('/atualizar/:id', async (req, res) => {
+  const { id } = req.params;
+  const { disponivel } = req.body;
 
+  try {
+    // Validar ID
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
+
+    // Validar campo disponivel
+    if (typeof disponivel !== 'boolean') {
+      return res.status(400).json({ erro: 'O campo disponivel deve ser um booleano' });
+    }
+
+    // Atualizar produto
+    const produto = await Produto.findByIdAndUpdate(
+      id,
+      { disponivel },
+      { new: true, runValidators: true }
+    );
+
+    if (!produto) {
+      return res.status(404).json({ erro: 'Produto não encontrado' });
+    }
+
+    res.status(200).json({
+      message: 'Produto atualizado com sucesso',
+      produto
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar produto:', error);
+    res.status(500).json({ erro: 'Erro ao atualizar produto' });
+  }
+});
 
 module.exports = router;
 
