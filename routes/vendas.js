@@ -79,22 +79,22 @@ router.post('/criar', async (req, res) => {
     }
 });
 
-router.get('/relatorio', (req, res) => {
+router.get("/relatorio", (req, res) => {
   const periodo = req.query.periodo;
   let inicio, fim;
 
-  if (periodo === 'dia') {
+  if (periodo === "dia") {
     const hoje = new Date();
     inicio = new Date(hoje.setHours(0, 0, 0, 0)); // Início do dia
     fim = new Date(hoje.setHours(23, 59, 59, 999)); // Fim do dia
-  } else if (periodo === 'semana') {
+  } else if (periodo === "semana") {
     const hoje = new Date();
     const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay())); // Primeiro dia da semana
     const ultimoDiaSemana = new Date(primeiroDiaSemana);
     ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6); // Último dia da semana
     inicio = primeiroDiaSemana;
     fim = ultimoDiaSemana;
-  } else if (periodo === 'mes') {
+  } else if (periodo === "mes") {
     const hoje = new Date();
     inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1); // Primeiro dia do mês
     fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0); // Último dia do mês
@@ -106,15 +106,20 @@ router.get('/relatorio', (req, res) => {
       $gte: inicio.toISOString(),
       $lte: fim.toISOString()
     }
-  }).then(vendas => {
-    const totalVendas = vendas.reduce((acc, venda) => acc + (venda.valorProduto - venda.desconto), 0);
-    res.json({
-      vendas,
-      totalVendas
+  })
+    .then(vendas => {
+      const totalVendas = vendas.reduce(
+        (acc, venda) => acc + (venda.valorProduto - venda.desconto),
+        0
+      );
+      res.json({
+        vendas,
+        totalVendas
+      });
+    })
+    .catch(err => {
+      res.status(500).json({ erro: "Erro ao buscar vendas" });
     });
-  }).catch(err => {
-    res.status(500).json({ erro: 'Erro ao buscar vendas' });
-  });
 });
 
 
