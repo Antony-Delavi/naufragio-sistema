@@ -118,9 +118,11 @@ router.get("/relatorio", (req, res) => {
       });
     })
     .catch(err => {
+      console.error("Erro ao buscar vendas:", err);
       res.status(500).json({ erro: "Erro ao buscar vendas" });
     });
 });
+
 
 
 module.exports = router;
