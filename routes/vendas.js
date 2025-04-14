@@ -99,8 +99,6 @@ router.post('/criar', async (req, res) => {
 
 router.get("/relatorio", async (req, res) => {
   const periodo = req.query.periodo;
-  let dataFiltro;
-
   const hoje = new Date();
   const formatarData = (date) => {
     const dia = String(date.getDate()).padStart(2, '0');
@@ -109,27 +107,28 @@ router.get("/relatorio", async (req, res) => {
     return `${dia}.${mes}.${ano}`;
   };
 
+  let query;
   if (periodo === "dia") {
-    dataFiltro = formatarData(hoje);
+    query = { dataCadastro: formatarData(hoje) };
   } else if (periodo === "semana") {
     const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay()));
     const ultimoDiaSemana = new Date(primeiroDiaSemana);
     ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6);
-    dataFiltro = {
-      $gte: formatarData(primeiroDiaSemana),
-      $lte: formatarData(ultimoDiaSemana)
+    query = {
+      dataCadastro: {
+        $gte: formatarData(primeiroDiaSemana),
+        $lte: formatarData(ultimoDiaSemana)
+      }
     };
   } else if (periodo === "mes") {
     const mes = String(hoje.getMonth() + 1).padStart(2, '0');
     const ano = String(hoje.getFullYear()).slice(-2);
-    dataFiltro = { $regex: `^\\d{2}\\.${mes}\\.${ano}$` };
+    query = { mesCadastro: `${mes}.${ano}` };
   } else if (periodo === "ano") {
-    const ano = String(hoje.getFullYear()).slice(-2);
-    dataFiltro = { $regex: `^\\d{2}\\.\\d{2}\\.${ano}$` };
+    query = { anoCadastro: String(hoje.getFullYear()) };
   }
 
   try {
-    const query = periodo === "dia" ? { dataCadastro: dataFiltro } : { dataCadastro: dataFiltro };
     const vendas = await Venda.find(query);
     const totalVendas = vendas.reduce(
       (acc, venda) => acc + (venda.valorProduto - venda.desconto),
