@@ -8,6 +8,26 @@ router.get('/buscarvendas', async (req, res) => {
     res.json(vendas)
 });
 
+router.delete('/deletar/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
+
+    const venda = await Venda.findByIdAndDelete(id);
+    if (!venda) {
+      return res.status(404).json({ erro: 'Venda não encontrada' });
+    }
+
+    res.json({ message: 'Venda deletada com sucesso' });
+  } catch (error) {
+    console.error('Erro ao deletar venda:', error);
+    res.status(500).json({ erro: 'Erro ao deletar venda' });
+  }
+});
+
 router.get('/buscarvendas/:dia', async (req, res) => {
   const dia = req.params.dia;
 
@@ -25,7 +45,6 @@ router.get('/buscarvendas/:dia', async (req, res) => {
   }
 });
 
-// Buscar vendas por mês
 router.get('/buscarvendasmes/:mes', async (req, res) => {
   const mes = req.params.mes;
 
@@ -47,32 +66,27 @@ router.post('/criar', async (req, res) => {
   const { nomeProduto, desconto } = req.body;
 
   try {
-    // Busca o produto disponível pelo nome
     const produto = await Produto.findOne({ nomeProduto, disponivel: true });
 
     if (!produto) {
       return res.status(404).json({ erro: 'Produto não encontrado ou já foi vendido.' });
     }
 
-    // Cria a venda com os dados do produto
     const novaVenda = new Venda({
       nomeProduto: produto.nomeProduto,
       valorProduto: produto.preco,
       desconto: Number(desconto),
       categoria: produto.categoria,
-      dataCadastro: new Date().toISOString().split('T')[0], // Formato de data para o campo dataCadastro
-      mesCadastro: new Date().toISOString().slice(5, 7) + '.' + new Date().toISOString().slice(2, 4), // Formato de mês para o campo mesCadastro
-      anoCadastro: new Date().toISOString().slice(0, 4) // Ano completo para o campo anoCadastro
+      dataCadastro: new Date().toISOString().split('T')[0],
+      mesCadastro: new Date().toISOString().slice(5, 7) + '.' + new Date().toISOString().slice(2, 4),
+      anoCadastro: new Date().toISOString().slice(0, 4)
     });
 
-    // Salva a nova venda no banco de dados
     await novaVenda.save();
 
-    // Marca o produto como indisponível após a venda
     produto.disponivel = false;
     await produto.save();
 
-    // Retorna a resposta com a venda criada
     res.status(201).json({
       mensagem: 'Venda registrada com sucesso!',
       venda: novaVenda
@@ -89,26 +103,25 @@ router.get("/relatorio", (req, res) => {
 
   if (periodo === "dia") {
     const hoje = new Date();
-    inicio = new Date(hoje.setHours(0, 0, 0, 0)); // Início do dia
-    fim = new Date(hoje.setHours(23, 59, 59, 999)); // Fim do dia
+    inicio = new Date(hoje.setHours(0, 0, 0, 0)); 
+    fim = new Date(hoje.setHours(23, 59, 59, 999));
   } else if (periodo === "semana") {
     const hoje = new Date();
-    const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay())); // Primeiro dia da semana
+    const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay())); 
     const ultimoDiaSemana = new Date(primeiroDiaSemana);
-    ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6); // Último dia da semana
+    ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6);
     inicio = primeiroDiaSemana;
     fim = ultimoDiaSemana;
   } else if (periodo === "mes") {
     const hoje = new Date();
-    inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1); // Primeiro dia do mês
-    fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0); // Último dia do mês
+    inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
   } else if (periodo === "ano") {
     const hoje = new Date();
-    inicio = new Date(hoje.getFullYear(), 0, 1); // Primeiro dia do ano
-    fim = new Date(hoje.getFullYear(), 11, 31); // Último dia do ano
+    inicio = new Date(hoje.getFullYear(), 0, 1);
+    fim = new Date(hoje.getFullYear(), 11, 31);
   }
 
-  // Buscar as vendas no período
   Venda.find({
     dataCadastro: {
       $gte: inicio.toISOString(),

@@ -28,10 +28,18 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
 
+app.use((req, res, next) => {
+  res.status(404).json({ erro: 'Rota não encontrada' });
+});
+app.use((err, req, res, next) => {
+  console.error('Erro no servidor:', err);
+  res.status(500).json({ erro: 'Erro interno do servidor' });
+});
+
 setInterval(() => {
   https.get(SELF_URL, (res) => {
     console.log(`[KeepAlive] Ping enviado. Status: ${res.statusCode}`);
   }).on('error', (err) => {
     console.error('[KeepAlive] Erro ao enviar ping:', err.message);
   });
-}, 3 * 60 * 1000);
+}, 5 * 60 * 1000);

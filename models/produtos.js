@@ -3,12 +3,11 @@ const mongoose = require('mongoose');
 const ProdutoSchema = new mongoose.Schema({
   nomeProduto: String,
   preco: Number,
-  cores: String,
   marca: String,
   estilo: String,
   tamanho: String,
   categoria: String,
-  imagem: String, // Novo campo para armazenar a imagem em Base64
+  imagem: String,
   disponivel: {
     type: Boolean,
     default: true
