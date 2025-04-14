@@ -97,51 +97,49 @@ router.post('/criar', async (req, res) => {
   }
 });
 
-router.get("/relatorio", (req, res) => {
+router.get("/relatorio", async (req, res) => {
   const periodo = req.query.periodo;
-  let inicio, fim;
+  let dataFiltro;
+
+  const hoje = new Date();
+  const formatarData = (date) => {
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const ano = String(date.getFullYear()).slice(-2);
+    return `${dia}.${mes}.${ano}`;
+  };
 
   if (periodo === "dia") {
-    const hoje = new Date();
-    inicio = new Date(hoje.setHours(0, 0, 0, 0)); 
-    fim = new Date(hoje.setHours(23, 59, 59, 999));
+    dataFiltro = formatarData(hoje);
   } else if (periodo === "semana") {
-    const hoje = new Date();
-    const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay())); 
+    const primeiroDiaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay()));
     const ultimoDiaSemana = new Date(primeiroDiaSemana);
     ultimoDiaSemana.setDate(primeiroDiaSemana.getDate() + 6);
-    inicio = primeiroDiaSemana;
-    fim = ultimoDiaSemana;
+    dataFiltro = {
+      $gte: formatarData(primeiroDiaSemana),
+      $lte: formatarData(ultimoDiaSemana)
+    };
   } else if (periodo === "mes") {
-    const hoje = new Date();
-    inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-    fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const ano = String(hoje.getFullYear()).slice(-2);
+    dataFiltro = { $regex: `^\\d{2}\\.${mes}\\.${ano}$` };
   } else if (periodo === "ano") {
-    const hoje = new Date();
-    inicio = new Date(hoje.getFullYear(), 0, 1);
-    fim = new Date(hoje.getFullYear(), 11, 31);
+    const ano = String(hoje.getFullYear()).slice(-2);
+    dataFiltro = { $regex: `^\\d{2}\\.\\d{2}\\.${ano}$` };
   }
 
-  Venda.find({
-    dataCadastro: {
-      $gte: inicio.toISOString(),
-      $lte: fim.toISOString()
-    }
-  })
-    .then(vendas => {
-      const totalVendas = vendas.reduce(
-        (acc, venda) => acc + (venda.valorProduto - venda.desconto),
-        0
-      );
-      res.json({
-        vendas,
-        totalVendas
-      });
-    })
-    .catch(err => {
-      console.error("Erro ao buscar vendas:", err);
-      res.status(500).json({ erro: "Erro ao buscar vendas" });
-    });
+  try {
+    const query = periodo === "dia" ? { dataCadastro: dataFiltro } : { dataCadastro: dataFiltro };
+    const vendas = await Venda.find(query);
+    const totalVendas = vendas.reduce(
+      (acc, venda) => acc + (venda.valorProduto - venda.desconto),
+      0
+    );
+    res.json({ vendas, totalVendas });
+  } catch (err) {
+    console.error("Erro ao buscar vendas:", err);
+    res.status(500).json({ erro: "Erro ao buscar vendas" });
+  }
 });
 
 module.exports = router;
