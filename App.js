@@ -7,7 +7,6 @@ const SELF_URL = 'https://naufragio-sistema.onrender.com/';
 
 const produtoRoutes = require('./routes/produtos');
 const vendasRoutes = require('./routes/vendas')
-const criarVenda = require('./routes/criarVenda')
 
 const app = express();
 app.use(express.json());
