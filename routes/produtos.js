@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Produto = require('../models/produtos');
+const authLogin = require('../middleware/authLogin');
 
-router.get('/buscar', async (req, res) => {
+router.get('/buscar', authLogin, async (req, res) => {
     const produtos = await Produto.find();
     res.json(produtos);
 });
 
-router.post('/criar', async (req, res) => {
+router.post('/criar', authLogin, async (req, res) => {
   try {
     const novoProduto = new Produto(req.body);
     await novoProduto.save();
@@ -18,7 +19,7 @@ router.post('/criar', async (req, res) => {
   }
 });
 
-router.delete('/deletar/:id', async (req, res) => {
+router.delete('/deletar/:id', authLogin, async (req, res) => {
   try {
     const { id } = req.params;
     const produto = await Produto.findByIdAndDelete(id);
@@ -34,7 +35,7 @@ router.delete('/deletar/:id', async (req, res) => {
   }
 });
 
-router.patch('/atualizar/:id', async (req, res) => {
+router.patch('/atualizar/:id', authLogin, async (req, res) => {
   const { id } = req.params;
   const { disponivel } = req.body;
 

@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Produto = require('../models/produtos');
 const Venda = require('../models/vendas');
+const authLogin = require('../middleware/authLogin');
 
-router.get('/buscarvendas', async (req, res) => {
+router.get('/buscarvendas', authLogin, async (req, res) => {
     const vendas = await Venda.find();
     res.json(vendas)
 });
 
-router.delete('/deletar/:id', async (req, res) => {
+router.delete('/deletar/:id', authLogin, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -28,7 +29,7 @@ router.delete('/deletar/:id', async (req, res) => {
   }
 });
 
-router.get('/buscarvendas/:dia', async (req, res) => {
+router.get('/buscarvendas/:dia', authLogin, async (req, res) => {
   const dia = req.params.dia;
 
   try {
@@ -45,7 +46,7 @@ router.get('/buscarvendas/:dia', async (req, res) => {
   }
 });
 
-router.get('/buscarvendasmes/:mes', async (req, res) => {
+router.get('/buscarvendasmes/:mes', authLogin, async (req, res) => {
   const mes = req.params.mes;
 
   try {
@@ -62,7 +63,7 @@ router.get('/buscarvendasmes/:mes', async (req, res) => {
   }
 });
   
-router.post('/criar', async (req, res) => {
+router.post('/criar', authLogin, async (req, res) => {
   const { nomeProduto, desconto } = req.body;
 
   try {
@@ -97,7 +98,7 @@ router.post('/criar', async (req, res) => {
   }
 });
 
-router.get("/relatorio", async (req, res) => {
+router.get("/relatorio", authLogin, async (req, res) => {
   const periodo = req.query.periodo;
   const hoje = new Date();
   const formatarData = (date) => {
