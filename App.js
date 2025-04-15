@@ -40,7 +40,7 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Frontend', 'index.html'));
+  res.sendFile(path.resolve('Frontend', 'index.html')); // Caminho relativo
 });
 
 app.get('/inicio', (req, res) => {
