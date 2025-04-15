@@ -16,7 +16,7 @@ app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
-app.use(express.static(path.join(__dirname, 'Frontend')));
+app.use(express.static(path.join(__dirname, './Frontend')));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB conectado'))
@@ -40,11 +40,11 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve('Frontend', 'index.html')); // Caminho relativo
+  res.sendFile(path.resolve(__dirname, './Frontend/index.html')); // Caminho relativo
 });
 
 app.get('/inicio', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Frontend', 'telaInicial.html'));
+  res.sendFile(path.join(__dirname, './Frontend/telaInicial.html'));
 })
 
 app.use((req, res, next) => {

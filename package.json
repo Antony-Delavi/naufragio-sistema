@@ -1,10 +1,9 @@
 {
-  "name": "backend",
+  "name": "naufragio-sistema",
   "version": "1.0.0",
-  "main": "App.js",
+  "main": "Backend/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node App.js"
+    "start": "node Backend/app.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2"
   }
