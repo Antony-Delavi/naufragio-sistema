@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
       .cookie('token', token, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60, // 1 hora
-        secure: false, // Ajuste para true em produção com HTTPS
+        secure: true, // Ajuste para true em produção com HTTPS
         sameSite: 'lax',
       })
       .json({ msg: 'Login bem-sucedido' });
