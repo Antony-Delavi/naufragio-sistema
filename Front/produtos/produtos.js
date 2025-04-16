@@ -5,7 +5,7 @@ const searchInput = document.getElementById('searchInput');
 let produtos = [];
 
 function carregarProdutos() {
-  fetch('https://naufragio-sistema.onrender.com/produtos/buscar')
+  fetch('https://naufragio.onrender.com/produtos/buscar')
     .then(res => res.json())
     .then(data => {
       produtos = data;
@@ -69,7 +69,7 @@ function venderProduto(nomeProduto) {
 
   if (desconto === null || desconto === '') return;
 
-  fetch('https://naufragio-sistema.onrender.com/vendas/criar', {
+  fetch('https://naufragio.onrender.com/vendas/criar', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ function reembolsarProduto(idProduto, nomeProduto) {
     console.log(`Iniciando reembolso para produto ID: ${idProduto}, Nome: ${nomeProduto}`);
     
     // Buscar venda associada
-    fetch('https://naufragio-sistema.onrender.com/vendas/buscar')
+    fetch('https://naufragio.onrender.com/vendas/buscar')
       .then(res => {
         console.log('Resposta de /vendas/buscar:', res.status, res.statusText);
         if (!res.ok) {
@@ -116,7 +116,7 @@ function reembolsarProduto(idProduto, nomeProduto) {
         console.log('Venda encontrada:', venda);
 
         // Deletar a venda
-        return fetch(`https://naufragio-sistema.onrender.com/vendas/deletar/${venda._id}`, {
+        return fetch(`https://naufragio.onrender.com/vendas/deletar/${venda._id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ function reembolsarProduto(idProduto, nomeProduto) {
           .then(response => {
             console.log('Venda deletada:', response);
             // Tornar produto disponível
-            return fetch(`https://naufragio-sistema.onrender.com/produtos/atualizar/${idProduto}`, {
+            return fetch(`https://naufragio.onrender.com/produtos/atualizar/${idProduto}`, {
               method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ function apagarProduto(id) {
   const confirmDelete = confirm(`Tem certeza que deseja apagar o produto "${nomeProduto}"?`);
   
   if (confirmDelete) {
-    fetch(`https://naufragio-sistema.onrender.com/produtos/deletar/${id}`, {
+    fetch(`https://naufragio.onrender.com/produtos/deletar/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

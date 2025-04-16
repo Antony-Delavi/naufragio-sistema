@@ -126,7 +126,7 @@
       <div class="card mx-auto">
         <h1>Login - Sistema de Vendas</h1>
         <form
-          action="https://naufragio-sistema.onrender.com/usuarios/login"
+          action="https://naufragio.onrender.com/usuarios/login"
           method="POST"
           id="loginForm"
         >
@@ -160,7 +160,7 @@
       // Verifica se o usuário já está logado ao carregar a página
       (async () => {
         try {
-          const response = await fetch('https://naufragio-sistema.onrender.com/usuarios/protected', {
+          const response = await fetch('https://naufragio.onrender.com/usuarios/protected', {
             method: 'GET',
             credentials: 'include',
           });
