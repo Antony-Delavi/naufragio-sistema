@@ -1,7 +1,7 @@
 {
   "name": "naufragio-sistema",
   "version": "1.0.0",
-  "main": "Backend/app.js",
+  "main": "Backend/App.js",
   "scripts": {
     "start": "node Backend/app.js"
   },
