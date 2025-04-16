@@ -16,6 +16,7 @@ app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
+
 app.use(express.static(path.join(__dirname, 'Frontend')));
 
 mongoose.connect(process.env.MONGO_URI)
