@@ -1,0 +1,157 @@
+body {
+  background-color: #121212;
+}
+
+.card {
+  border: none;
+  border-radius: 0.75rem;
+}
+
+.card-produto {
+  background-color: #1f1f1f;
+  transition: transform 0.2s ease;
+}
+
+.card-produto:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+}
+
+.card-body {
+  padding: 1.5rem;
+  color: #ffffff;
+}
+
+.card-title {
+  color: #00d1ff;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-body p {
+  color: #b0bec5;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.card-body small {
+  color: #b0bec5;
+  font-size: 0.9rem;
+}
+
+.container {
+  padding: 1.5rem;
+}
+
+.filtro-container select {
+  background-color: #1f1f1f;
+  color: white;
+  border: 1px solid #00d1ff;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filtro-container select:focus {
+  outline: none;
+  border-color: #80deea;
+  box-shadow: 0 0 5px rgba(128, 222, 234, 0.5);
+}
+
+.venda-card {
+  background-color: #1f1f1f;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease;
+  min-height: 200px;
+}
+
+.venda-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+}
+
+.venda-card .card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.venda-data {
+  color: #b0bec5;
+  font-size: 0.9rem;
+}
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+  font-size: 0.9rem;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+#vendas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0;
+}
+
+/* Estilo do botão de voltar */
+.btn-custom {
+  background-color: #1f1f1f;
+  color: #b0bec5;
+  border: 1px solid #00d1ff;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.btn-custom:hover {
+  background-color: #00d1ff;
+  color: #121212;
+  transform: translateY(-2px);
+}
+
+.btn-custom i {
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  #vendas-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .venda-card {
+    min-height: 180px;
+  }
+
+  .btn-custom {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (min-width: 768px) {
+  #vendas-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

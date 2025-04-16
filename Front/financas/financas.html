@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Financeiro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-light mb-4">Dashboard Financeiro</h2>
+    <button class="btn btn-custom mb-4" onclick="location.href='../telaInicial.html'">
+      <i class="bi bi-arrow-left"></i> Voltar para Home
+    </button>
+
+    <!-- Filtros -->
+    <div class="filtro-container mb-4">
+      <div class="row g-2">
+        <div class="col-md-3">
+          <select id="filtro-periodo" class="form-select">
+            <option value="dia">Dia</option>
+            <option value="semana">Semana</option>
+            <option value="mes">Mês</option>
+            <option value="3meses">Últimos 3 Meses</option>
+            <option value="6meses">Últimos 6 Meses</option>
+            <option value="ano">Ano</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo Financeiro -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card card-produto">
+          <div class="card-body">
+            <h5 class="card-title">Total de Vendas</h5>
+            <p id="total-vendas" class="fs-4">R$ 0,00</p>
+            <small>Período selecionado</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-produto">
+          <div class="card-body">
+            <h5 class="card-title">Número de Vendas</h5>
+            <p id="numero-vendas" class="fs-4">0</p>
+            <small>Período selecionado</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card card-produto">
+          <div class="card-body">
+            <h5 class="card-title">Desconto Médio</h5>
+            <p id="desconto-medio" class="fs-4">R$ 0,00</p>
+            <small>Período selecionado</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card card-produto">
+          <div class="card-body">
+            <h5 class="card-title">Vendas por Data</h5>
+            <canvas id="grafico-vendas"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-produto">
+          <div class="card-body">
+            <h5 class="card-title">Distribuição por Categoria</h5>
+            <canvas id="grafico-categorias"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Vendas -->
+    <div class="card card-produto">
+      <div class="card-body">
+        <h5 class="card-title">Lista de Vendas</h5>
+        <div id="vendas-container" class="row"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

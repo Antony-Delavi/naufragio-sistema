@@ -1,0 +1,152 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #121212;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background-color: #1f1f1f;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.6s ease forwards;
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+.container.animate {
+  animation: slideIn 0.6s ease forwards;
+}
+
+@keyframes slideIn {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #00d1ff;
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background-color: #212121;
+  color: #ffffff;
+  border: 1px solid #00d1ff;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  border-color: #80deea;
+  box-shadow: 0 0 8px rgba(128, 222, 234, 0.5);
+  outline: none;
+}
+
+input[type="file"] {
+  padding: 0.5rem;
+}
+
+button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #00d1ff;
+  color: #121212;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #80deea;
+  transform: scale(1.03);
+}
+
+#mensagem {
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+#mensagem.success {
+  color: #28a745;
+}
+
+#mensagem.error {
+  color: #dc3545;
+}
+
+.btn-outline-light {
+  border-color: #b0bec5;
+  color: #b0bec5;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.btn-outline-light:hover {
+  background-color: #b0bec5;
+  color: #121212;
+}
+
+@media (max-width: 576px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  input {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  input[type="file"] {
+    font-size: 0.85rem;
+    padding: 0.4rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  #mensagem {
+    font-size: 0.85rem;
+  }
+
+  .btn-outline-light {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

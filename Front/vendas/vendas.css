@@ -1,0 +1,177 @@
+body {
+  background-color: #121212;
+}
+
+.card {
+  border: none;
+  border-radius: 0.75rem;
+}
+
+.venda-card {
+  background-color: #1f1f1f;
+  transition: transform 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.venda-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+}
+
+.card-body {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
+
+.card-title {
+  color: #00d1ff;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-body p {
+  color: #b0bec5;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.venda-data {
+  color: #b0bec5;
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+.resumo-card {
+  background-color: #212121;
+  color: #ffffff;
+  border-left: 5px solid #00d1ff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  height: 100%;
+}
+
+.container {
+  padding: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.filtro-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.filtro-container input,
+.filtro-container select {
+  background-color: #1f1f1f;
+  color: white;
+  border: 1px solid #00d1ff;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.filtro-container input:focus,
+.filtro-container select:focus {
+  outline: none;
+  border-color: #80deea;
+  box-shadow: 0 0 5px rgba(128, 222, 234, 0.5);
+}
+
+.btn-outline-light {
+  border-color: #b0bec5;
+  color: #b0bec5;
+}
+
+.btn-outline-light:hover {
+  background-color: #b0bec5;
+  color: #121212;
+}
+
+/* Layout da grade: 2 colunas no celular, 3 no desktop */
+#vendas-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+#resumos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 767px) {
+  #vendas-container,
+  #resumos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  .venda-card,
+  .resumo-card {
+    margin-bottom: 0.75rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-body p,
+  .venda-data {
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .filtro-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filtro-container input,
+  .filtro-container select {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+}
