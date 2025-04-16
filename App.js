@@ -17,7 +17,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
 
-app.use(express.static(path.join(__dirname, 'Frontend')));
+app.use(express.static(path.join(__dirname, 'Front')));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB conectado'))
@@ -41,11 +41,11 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, 'Front', 'index.html'));
 });
 
 app.get('/inicio', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Frontend', 'telaInicial.html'));
+  res.sendFile(path.join(__dirname, 'Front', 'telaInicial.html'));
 });
 
 app.use((req, res, next) => {
