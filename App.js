@@ -18,8 +18,7 @@ app.use(express.json());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
-app.use(helmet());
-app.use(cors({ origin: '' }));
+app.use(cors({ origin: 'https://naufragio.onrender.com' }));
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // max 100 requisições
