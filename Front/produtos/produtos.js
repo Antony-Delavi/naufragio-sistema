@@ -1,6 +1,8 @@
 const produtosDisponiveis = document.getElementById('produtos-disponiveis');
 const produtosIndisponiveis = document.getElementById('produtos-indisponiveis');
 const searchInput = document.getElementById('searchInput');
+const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+const editForm = document.getElementById('editForm');
 
 let produtos = [];
 
@@ -37,6 +39,7 @@ function renderizarProdutos(produtos) {
         <div class="mt-auto d-flex gap-2">
           ${produto.disponivel ? `<button onclick="venderProduto('${encodeURIComponent(produto.nomeProduto)}')" class="btn btn-sm btn-outline-success">💸</button>` : ''}
           ${!produto.disponivel ? `<button onclick="reembolsarProduto('${produto._id}', '${encodeURIComponent(produto.nomeProduto)}')" class="btn btn-sm btn-outline-warning">🔄</button>` : ''}
+          <button onclick="editarProduto('${produto._id}')" class="btn btn-sm btn-outline-primary">✏️</button>
           <button onclick="apagarProduto('${produto._id}')" class="btn btn-sm btn-outline-danger">🗑️</button>
         </div>
         <div class="detalhes-produto">
@@ -62,6 +65,63 @@ function renderizarProdutos(produtos) {
     });
   });
 }
+
+function editarProduto(id) {
+  const produto = produtos.find(p => p._id === id);
+  if (!produto) {
+    alert('Produto não encontrado.');
+    return;
+  }
+
+  document.getElementById('editId').value = produto._id;
+  document.getElementById('editNome').value = produto.nomeProduto || '';
+  document.getElementById('editPreco').value = produto.preco || '';
+  document.getElementById('editMarca').value = produto.marca || '';
+  document.getElementById('editEstilo').value = produto.estilo || '';
+  document.getElementById('editTamanho').value = produto.tamanho || '';
+  document.getElementById('editCategoria').value = produto.categoria || '';
+  document.getElementById('editImagem').value = produto.imagem || '';
+  document.getElementById('editDisponivel').checked = produto.disponivel;
+
+  editModal.show();
+}
+
+editForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const id = document.getElementById('editId').value;
+  const updatedProduct = {
+    nomeProduto: document.getElementById('editNome').value,
+    preco: parseFloat(document.getElementById('editPreco').value) || 0,
+    marca: document.getElementById('editMarca').value,
+    estilo: document.getElementById('editEstilo').value,
+    tamanho: document.getElementById('editTamanho').value,
+    categoria: document.getElementById('editCategoria').value,
+    imagem: document.getElementById('editImagem').value,
+    disponivel: document.getElementById('editDisponivel').checked
+  };
+
+  fetch(`https://naufragio.onrender.com/produtos/atualizar/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updatedProduct)
+  })
+    .then(res => res.json())
+    .then(response => {
+      if (response.erro) {
+        alert(response.erro);
+      } else {
+        alert('Produto atualizado com sucesso!');
+        carregarProdutos();
+        editModal.hide();
+      }
+    })
+    .catch(err => {
+      console.error('Erro ao atualizar produto:', err);
+      alert('Erro ao atualizar produto.');
+    });
+});
 
 function venderProduto(nomeProduto) {
   nomeProduto = decodeURIComponent(nomeProduto);

@@ -38,15 +38,20 @@ router.delete('/deletar/:id', authLogin, async (req, res) => {
 
 router.patch('/atualizar/:id', authLogin, async (req, res) => {
   const { id } = req.params;
-  const { disponivel } = req.body;
+  const {
+    nomeProduto,
+    preco,
+    marca,
+    estilo,
+    tamanho,
+    categoria,
+    imagem,
+    disponivel
+  } = req.body;
 
   try {
     if (!id.match(/^[0-9a-fA-F]{24}$/)) {
       return res.status(400).json({ erro: 'ID inválido' });
-    }
-
-    if (typeof disponivel !== 'boolean') {
-      return res.status(400).json({ erro: 'O campo disponivel deve ser um booleano' });
     }
 
     const produto = await Produto.findById(id);
@@ -54,7 +59,29 @@ router.patch('/atualizar/:id', authLogin, async (req, res) => {
       return res.status(404).json({ erro: 'Produto não encontrado' });
     }
 
-    produto.disponivel = disponivel;
+    // Sanitize inputs
+    const updatedFields = {};
+    if (nomeProduto !== undefined) updatedFields.nomeProduto = xss(nomeProduto);
+    if (preco !== undefined) {
+      if (typeof preco !== 'number' || preco < 0) {
+        return res.status(400).json({ erro: 'Preço deve ser um número positivo' });
+      }
+      updatedFields.preco = preco;
+    }
+    if (marca !== undefined) updatedFields.marca = xss(marca);
+    if (estilo !== undefined) updatedFields.estilo = xss(estilo);
+    if (tamanho !== undefined) updatedFields.tamanho = xss(tamanho);
+    if (categoria !== undefined) updatedFields.categoria = xss(categoria);
+    if (imagem !== undefined) updatedFields.imagem = xss(imagem);
+    if (disponivel !== undefined) {
+      if (typeof disponivel !== 'boolean') {
+        return res.status(400).json({ erro: 'O campo disponivel deve ser um booleano' });
+      }
+      updatedFields.disponivel = disponivel;
+    }
+
+    // Update only provided fields
+    Object.assign(produto, updatedFields);
     await produto.save();
 
     res.status(200).json({
