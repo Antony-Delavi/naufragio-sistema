@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { username, password } = xss(req.body);
+  const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
