@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "backups-naufragio",
+  "private_key_id": "60e0e09b2d6ad17b20ebe004192bad5ac76f7be1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCSIOH0nDoDRYjH\nIwcWkz/FwmmSYwTwG4z45Vflk8tzfYdkd4/fVx5Bgl8OClhhuLSFfeEJEtJ8NeTC\ny6pCk35ZPgFEywgzfuFoWW1gXXHPqL9Am/blgdtn4ut5Nqz5xbH+YsygCMYRlP7k\n1cR+rOBhoE4wwS8zVeyvu7k6H/rVC0o3ui9yYCXuY8pOdAtQXjDFPkrcxYQFHbqz\nkiGPxOt7d7oDdkHvPj9xNcS0bZEePCpwNIfpmXGN5gJZs5sQ1UvnTKALJ2GrTRqJ\naRAcTJExk/g9TCEB+l5Ta119KIcSfwLlgacbHXj3Pe46schA970mwIRg+No2XBkP\nKxD+8d6pAgMBAAECggEABVKboxB9D85yF31/+MNfUMxD59hMfz8kU5KYW4frzWah\nTmMJLg5Fz1wOK1GW0ORsoD+ADsJilrH92wHrzztWda4LrMj6dlRk+ys6uoZc1Wlk\n91esVsVz9k+ZL9PyhAc+nwX+mcZdX0Q+mUZCFIfRL9fU0UjQIn4QPixyfZqu78tI\njwkR/4KIrUZv2tmHkeDBbLns2uzV4Cq4NfeySfo3LlB9F7iX3tE8UHATT6I7HvYf\n0RW07zYDWU18UCJ1zkgKk0O7ANbtMT9y3KdSEJe9UfZxf9itwKiRESJmy2/Eb9fk\n+sohGdimfl/aFd4ZBe8Vn3Gsz0jydAgE3zpx1c2mywKBgQDDGFtDUvUqEyIALt4W\nAmhZXD3X5bDbPJp/BawauxyV6kpk7g3+0SWT/Sunb/RtFeMbfP94kcoHvqFC43If\nqVIu/I93NSdJOyevgl2T67rnUmze4X+lqm7Fn0PIDa+O+Geadx0+SAUXa85j7b34\n2HBUxT/gOmotgmbtDc+LfXUCFwKBgQC/vzLFhoswfwAb4Y9M0ocejEzCcjUoE7am\nZhx6JhaKzwAtJmKIbBEBfq+c3Fs/QD9PDqPtH9YlKPT3e2RS13gncoIBeKfHob9Z\ndwULj6iIbUVvJ8SpGOsotKP9Z3n7zsX6YhVrxrxVI03jlxbaij6RV/GuSgIljAgX\nnvv/4DxdPwKBgFIN8HSEc7DakzZYf/fp01GiRjCD3rqW5rP+AsDLad5zyA5jQWen\nN5LirHWj1L38sqRhEmH3j21qdBDZ8Kn4YSR5/S06IeffBXX/8rPANcANHtUvKqzW\n3fgoYC3H88rCF3EUICyNxfZv1UKaP4hmH/jHbXI1n2q8qeWSJXSZs5jJAoGBAII1\nfGzWKL8N/yzvxzgL3uXHsHh6xc4pVOc6gCwSoUwxtZTzdAXgHMw/E1IZ8XzKTDOL\nZZYpAGrLnU5R5Ja860MeZ1pIbOcL170RLcPkEjZSvcv13X5XBZnm0VXLZvKwP5D/\n+jvuAQZvqvzaJRLSvhpE9kG80ChfJz+jHs1roJJRAoGAFmsqIKKDS5RJFNHl2thw\n4YGSF30efsU2NBGqTUfa8ijciGnn6DIjBDXam+OmPa6wO9cDODnnFwdEi68Zji8k\nCiVIVgbiD/O2rZ33uGwdHTXZk2SD+hSFPbbSO6vtHPgvzhMAxuDn8i9KIjLywxhw\noztOPBU8SekGksdbztFHuEw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "naufragio@backups-naufragio.iam.gserviceaccount.com",
+  "client_id": "104462521178527710763",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/naufragio%40backups-naufragio.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
