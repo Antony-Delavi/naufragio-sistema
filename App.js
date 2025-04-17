@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const path = require('path');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
 const https = require('https');
 const SELF_URL = 'https://naufragio.onrender.com/render/keepAlive';
 const cookieParses = require('cookie-parser');
@@ -18,13 +16,7 @@ app.use(express.json());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
-app.use(cors({ origin: 'https://naufragio.onrender.com' }));
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // max 100 requisições
-  standardHeaders: true,
-  legacyHeaders: false,
-}));
+app.use(cors({ origin: '*' }));
 
 app.use(express.static(path.join(__dirname, 'Front')));
 
