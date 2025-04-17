@@ -41,9 +41,9 @@ function renderizarProdutos(produtos) {
         </div>
         <div class="detalhes-produto">
           ${produto.imagem ? `<img src="${produto.imagem}" alt="${produto.nomeProduto}" />` : '<p>Sem imagem</p>'}
-          <p><strong>Marca:</strong> ${produto.marca || 'Sem marca'}</p>
-          <p><strong>Estilo:</strong> ${produto.estilo || 'Sem estilo'}</p>
-          <p><strong>Tamanho:</strong> ${produto.tamanho || 'Sem tamanho'}</p>
+          <p><strong>Descrição:</strong> ${produto.descricao || 'Sem descrição'}</p>
+          <p><strong>Marca:</strong> ${produto.marca}</p>
+          <p><strong>Valor Original:</strong> R$ ${produto.precoOriginal ? produto.precoOriginal.toFixed(2) : produto.preco.toFixed(2)}</p>
         </div>
       </div>
     `;
@@ -98,6 +98,7 @@ function reembolsarProduto(idProduto, nomeProduto) {
   if (confirmReembolso) {
     console.log(`Iniciando reembolso para produto ID: ${idProduto}, Nome: ${nomeProduto}`);
     
+    // Buscar venda associada
     fetch('https://naufragio.onrender.com/vendas/buscar')
       .then(res => {
         console.log('Resposta de /vendas/buscar:', res.status, res.statusText);
@@ -114,6 +115,7 @@ function reembolsarProduto(idProduto, nomeProduto) {
         }
         console.log('Venda encontrada:', venda);
 
+        // Deletar a venda
         return fetch(`https://naufragio.onrender.com/vendas/deletar/${venda._id}`, {
           method: 'DELETE',
           headers: {
@@ -129,6 +131,7 @@ function reembolsarProduto(idProduto, nomeProduto) {
           })
           .then(response => {
             console.log('Venda deletada:', response);
+            // Tornar produto disponível
             return fetch(`https://naufragio.onrender.com/produtos/atualizar/${idProduto}`, {
               method: 'PATCH',
               headers: {

@@ -68,4 +68,3 @@ router.patch('/atualizar/:id', authLogin, async (req, res) => {
 });
 
 module.exports = router;
-
