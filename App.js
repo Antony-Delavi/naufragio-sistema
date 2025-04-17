@@ -22,7 +22,7 @@ app.use(cookieParses());
 app.use(express.static(path.join(__dirname, 'Front')));
 
 // Segurança //
-app.use(cors({ origin: 'https://naufragio.onrender.com'}));
+app.use(cors({ origin: '*'}));
 
 // MongoDb Connection //
 mongoose.connect(process.env.MONGO_URI)
