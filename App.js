@@ -21,12 +21,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
 app.use(express.static(path.join(__dirname, 'Front')));
-const sanitize = require('./middleware/sanitize');
 
 // Segurança //
 app.use(cors({ origin: 'https://naufragio.onrender.com'}));
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(sanitize)
 
 // MongoDb Connection //
 mongoose.connect(process.env.MONGO_URI)
