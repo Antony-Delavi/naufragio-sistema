@@ -15,6 +15,7 @@ const produtoRoutes = require('./routes/produtos');
 const vendasRoutes = require('./routes/vendas');
 const usuariosRoutes = require('./routes/usuarios');
 const keepAlive = require('./routes/keepAlive');
+const backupProdts = require('./routes/backup')
 
 // middlewares //
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use('/produtos', produtoRoutes);
 app.use('/vendas', vendasRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/render', keepAlive);
+app.use('/backups', backupProdts);
 
 app.use((err, req, res, next) => {
   console.error('Erro no servidor:', err);
