@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/usuarios');
 const router = express.Router();
 const authLogin = require('../middleware/authLogin');
-const xss = require('xss')
 
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
@@ -24,7 +23,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { username, password } = xss(req.body);
+  const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
