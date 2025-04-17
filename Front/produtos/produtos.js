@@ -35,8 +35,7 @@ function renderizarProdutos(produtos) {
         <span class="badge ${badgeClass} mb-2">${badgeText}</span><br>
         <small>R$ ${produto.preco.toFixed(2)}</small>
         <div class="mt-auto d-flex gap-2">
-          ${produto.disponivel ? `<button onclick="venderProduto('${encodeURIComponent(produto.nomeProduto)}')" class="btn btn-sm btn-outline-success">💸</button>` : ''}
-          ${!produto.disponivel ? `<button onclick="reembolsarProduto('${produto._id}', '${encodeURIComponent(produto.nomeProduto)}')" class="btn btn-sm btn-outline-warning">🔄</button>` : ''}
+          ${produto.disponivel ? `<button onclick="venderProduto('${encodeURIComponent(produto.nomeProduto)}', ${produto.preco})" class="btn btn-sm btn-outline-success">💸</button>` : ''}
           <button onclick="apagarProduto('${produto._id}')" class="btn btn-sm btn-outline-danger">🗑️</button>
         </div>
         <div class="detalhes-produto">
@@ -63,98 +62,108 @@ function renderizarProdutos(produtos) {
   });
 }
 
-function venderProduto(nomeProduto) {
+function gerarPayloadPix(chavePix, valor, nomeBeneficiario, cidade) {
+  const payload = [
+    "000201", // Payload Format Indicator
+    "26580014BR.GOV.BCB.PIX",
+    `0114${chavePix}`, // Chave PIX
+    `52040000`, // Merchant Category Code
+    `5303986`, // Currency (BRL)
+    `54${valor.toFixed(2).padStart(8, '0')}`, // Transaction Amount
+    `5802BR`, // Country Code
+    `59${nomeBeneficiario.padEnd(25, ' ')}`, // Merchant Name
+    `60${cidade.padEnd(15, ' ')}`, // Merchant City
+    `62630521BR.COM.PIX.NFCE.RECEBIMENTO`, // Additional Data
+    "6304" // CRC16 placeholder
+  ].join("");
+
+  // Calcula o CRC16
+  const crc = calcularCRC16(payload).toString(16).toUpperCase().padStart(4, '0');
+  return payload + crc;
+}
+
+function calcularCRC16(payload) {
+  let crc = 0xFFFF;
+  for (let i = 0; i < payload.length; i++) {
+    crc ^= payload.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      if (crc & 0x8000) {
+        crc = (crc << 1) ^ 0x1021;
+      } else {
+        crc <<= 1;
+      }
+      crc &= 0xFFFF;
+    }
+  }
+  return crc;
+}
+
+function venderProduto(nomeProduto, precoOriginal) {
   nomeProduto = decodeURIComponent(nomeProduto);
   const desconto = prompt("Informe o desconto em reais (caso não haja, digite 0):");
 
   if (desconto === null || desconto === '') return;
 
-  fetch('https://naufragio.onrender.com/vendas/criar', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ nomeProduto, desconto })
-  })
-    .then(res => res.json())
-    .then(response => {
-      if (response.erro) {
-        alert(response.erro);
-      } else {
-        alert('Venda realizada com sucesso!');
-        carregarProdutos();
-      }
+  const descontoNum = parseFloat(desconto) || 0;
+  if (descontoNum < 0) {
+    alert('Desconto não pode ser negativo.');
+    return;
+  }
+
+  const valorFinal = precoOriginal - descontoNum;
+  if (valorFinal <= 0) {
+    alert('O valor final após o desconto deve ser maior que zero.');
+    return;
+  }
+
+  // Configurações do PIX (substitua com seus dados reais)
+  const chavePix = "sua-chave-pix-aqui"; // Ex: CPF, e-mail ou chave aleatória
+  const nomeBeneficiario = "Seu Nome"; // Nome do beneficiário
+  const cidade = "Sua Cidade"; // Cidade do beneficiário
+
+  const payloadPix = gerarPayloadPix(chavePix, valorFinal, nomeBeneficiario, cidade);
+
+  // Exibe o modal com o QR Code
+  const qrcodeContainer = document.getElementById('qrcode');
+  qrcodeContainer.innerHTML = '';
+  new QRCode(qrcodeContainer, {
+    text: payloadPix,
+    width: 200,
+    height: 200,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  document.getElementById('valor-pix').textContent = `Valor a pagar: R$ ${valorFinal.toFixed(2)}`;
+  const pixModal = new bootstrap.Modal(document.getElementById('pixModal'));
+  pixModal.show();
+
+  // Configura o botão Confirmar Pagamento
+  const confirmarPagamento = document.getElementById('confirmarPagamento');
+  confirmarPagamento.onclick = () => {
+    fetch('https://naufragio.onrender.com/vendas/criar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nomeProduto, desconto: descontoNum })
     })
-    .catch(err => {
-      console.error('Erro ao vender:', err);
-      alert('Erro ao realizar a venda.');
-    });
-}
-
-function reembolsarProduto(idProduto, nomeProduto) {
-  nomeProduto = decodeURIComponent(nomeProduto);
-  const confirmReembolso = confirm(`Tem certeza que deseja reembolsar "${nomeProduto}"? Isso tornará o produto disponível novamente e removerá a venda associada.`);
-
-  if (confirmReembolso) {
-    console.log(`Iniciando reembolso para produto ID: ${idProduto}, Nome: ${nomeProduto}`);
-    
-    fetch('https://naufragio.onrender.com/vendas/buscar')
-      .then(res => {
-        console.log('Resposta de /vendas/buscar:', res.status, res.statusText);
-        if (!res.ok) {
-          throw new Error(`Erro ao buscar vendas: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then(vendas => {
-        console.log('Vendas recebidas:', vendas);
-        const venda = vendas.find(v => v.nomeProduto === nomeProduto);
-        if (!venda) {
-          throw new Error('Nenhuma venda encontrada para este produto.');
-        }
-        console.log('Venda encontrada:', venda);
-
-        return fetch(`https://naufragio.onrender.com/vendas/deletar/${venda._id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(res => {
-            console.log('Resposta de /vendas/deletar:', res.status, res.statusText);
-            if (!res.ok) {
-              return res.text().then(text => { throw new Error(`Erro ao deletar venda: ${text}`); });
-            }
-            return res.json();
-          })
-          .then(response => {
-            console.log('Venda deletada:', response);
-            return fetch(`https://naufragio.onrender.com/produtos/atualizar/${idProduto}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ disponivel: true })
-            });
-          });
-      })
-      .then(res => {
-        console.log('Resposta de /produtos/atualizar:', res.status, res.statusText);
-        if (!res.ok) {
-          return res.text().then(text => { throw new Error(`Erro ao atualizar produto: ${text}`); });
-        }
-        return res.json();
-      })
+      .then(res => res.json())
       .then(response => {
-        console.log('Produto atualizado:', response);
-        alert(response.message || 'Produto reembolsado com sucesso! Disponível novamente.');
-        carregarProdutos();
+        if (response.erro) {
+          alert(response.erro);
+        } else {
+          alert('Venda realizada com sucesso!');
+          carregarProdutos();
+          pixModal.hide();
+        }
       })
       .catch(err => {
-        console.error('Erro ao reembolsar:', err);
-        alert(`Erro ao reembolsar: ${err.message}`);
+        console.error('Erro ao vender:', err);
+        alert('Erro ao realizar a venda.');
       });
-  }
+  };
 }
 
 function apagarProduto(id) {
