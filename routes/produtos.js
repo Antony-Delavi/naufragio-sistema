@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Produto = require('../models/produtos');
 const authLogin = require('../middleware/authLogin');
-const xss = require('xss')
+const xss = require('xss');
 
 router.get('/buscar', authLogin, async (req, res) => {
-    const produtos = await Produto.find();
-    res.json(produtos);
+  const produtos = await Produto.find();
+  res.json(produtos);
 });
 
 router.post('/criar', authLogin, async (req, res) => {
@@ -95,4 +95,3 @@ router.patch('/atualizar/:id', authLogin, async (req, res) => {
 });
 
 module.exports = router;
-
