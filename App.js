@@ -16,6 +16,26 @@ const usuariosRoutes = require('./routes/usuarios');
 const keepAlive = require('./routes/keepAlive');
 const backup = require('./routes/backup');
 
+// Configurações Cors //
+const allowedOrigins = [
+  'https://naufragio.onrender.com',
+  'http://127.0.0.1:5500/'
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Permite requisições sem origem (ex: Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Não permitido pelo CORS'));
+    }
+  },
+  credentials: true, // se estiver usando cookies/autenticação
+};
+
 // middlewares //
 app.use(express.json());
 app.use(express.json({ limit: '10mb' }));
@@ -25,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'Front')));
 const sanitize = require('./middleware/sanitize');
 
 // Segurança //
-app.use(cors({ origin: 'https://naufragio.onrender.com'}));
+app.use(cors({corsOptions}));
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(sanitize);
 
