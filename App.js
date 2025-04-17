@@ -24,7 +24,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
 app.use(express.static(path.join(__dirname, 'Front')));
-app.use('./middleware/sanitize.js')
+const sanitize = require('./middleware/sanitize')
 
 // Segurança //
 app.use(cors({ origin: 'https://naufragio.onrender.com'}));
