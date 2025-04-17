@@ -3,7 +3,7 @@ const router = express.Router();
 const Produto = require('../models/produtos');
 const authLogin = require('../middleware/authLogin');
 
-router.get('/buscar', authLogin, async (req, res) => {
+router.get('/buscar', async (req, res) => {
     const produtos = await Produto.find();
     res.json(produtos);
 });
