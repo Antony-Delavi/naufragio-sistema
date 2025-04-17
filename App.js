@@ -3,7 +3,6 @@ const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
 const path = require('path');
-const helmet = require('helmet');
 const cors = require('cors');
 const https = require('https');
 const SELF_URL = 'https://naufragio.onrender.com/render/keepAlive';
@@ -24,7 +23,6 @@ app.use(express.static(path.join(__dirname, 'Front')));
 
 // Segurança //
 app.use(cors({ origin: 'https://naufragio.onrender.com'}));
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 // MongoDb Connection //
 mongoose.connect(process.env.MONGO_URI)
