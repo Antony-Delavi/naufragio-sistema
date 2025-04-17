@@ -1,5 +1,5 @@
 const express = require('express');
-const router = Router.express();
+const router = router.express();
 const authLogin = require('../middleware/authLogin')
 const fazerBackup = require('../backup/googleDriveBackup')
 
