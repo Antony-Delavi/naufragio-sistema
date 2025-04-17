@@ -7,7 +7,6 @@ const cors = require('cors');
 const https = require('https');
 const SELF_URL = 'https://naufragio.onrender.com/render/keepAlive';
 const cookieParses = require('cookie-parser');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 // Rotas //
 const produtoRoutes = require('./routes/produtos');
