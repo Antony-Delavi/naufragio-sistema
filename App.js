@@ -5,6 +5,7 @@ require('dotenv').config();
 const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const https = require('https');
 const SELF_URL = 'https://naufragio.onrender.com/render/keepAlive';
 const cookieParses = require('cookie-parser');
@@ -14,23 +15,35 @@ const produtoRoutes = require('./routes/produtos');
 const vendasRoutes = require('./routes/vendas');
 const usuariosRoutes = require('./routes/usuarios');
 const keepAlive = require('./routes/keepAlive');
+const sanitize = require('./middleware/sanitize');
 
+
+// middlewares //
 app.use(express.json());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParses());
+app.use(express.static(path.join(__dirname, 'Front')));
+app.use('./middleware/sanitize.js')
 
 // Segurança //
 app.use(cors({ origin: 'https://naufragio.onrender.com'}));
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(sanitize)
+app.use(rateLimit({
+  windowMs: 10 * 60 * 1000, 
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+}));
 
 
-app.use(express.static(path.join(__dirname, 'Front')));
-
+// MongoDb Connection //
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB conectado'))
   .catch(err => console.error(err));
 
+// Rotas //
 app.use('/produtos', produtoRoutes);
 app.use('/vendas', vendasRoutes);
 app.use('/usuarios', usuariosRoutes);
@@ -41,6 +54,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ erro: 'Erro interno do servidor' });
 });
 
+// KeepAlive //
 setInterval(() => {
   https.get(SELF_URL, (res) => {
     console.log(`[KeepAlive] Ping enviado. Status: ${res.statusCode}`);
@@ -49,13 +63,15 @@ setInterval(() => {
   });
 }, 5 * 60 * 1000);
 
+
+// Rotas Iniciais //
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'Front', 'index.html'));
 });
-
 app.get('/inicio', (req, res) => {
   res.sendFile(path.join(__dirname, 'Front', 'telaInicial.html'));
 });
+
 
 app.use((req, res, next) => {
   res.status(404).json({ erro: 'Rota não encontrada' });
