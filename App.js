@@ -7,7 +7,7 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const xss = require('xss-clean');
+const sanitize = require('./middleware/sanitize')
 
 const https = require('https');
 const cookieParser = require('cookie-parser');
@@ -39,7 +39,7 @@ app.use(cors({
 }));
 app.use(helmet());
 app.use(limiter)
-app.use(xss());
+app.use(sanitize)
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'Front')));
 
