@@ -1,11 +1,10 @@
-const express = require('express')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const User = require('../models/usuarios')
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/usuarios');
 const router = express.Router();
-const authLogin = require('../middleware/authLogin')
-
-const ONE_HOUR = 1000 * 60 * 60;
+const authLogin = require('../middleware/authLogin');
+const xss = require('xss');
 
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
@@ -25,7 +24,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = xss(req.body);
 
   try {
     const user = await User.findOne({ username });
