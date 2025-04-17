@@ -14,7 +14,7 @@ const produtoRoutes = require('./routes/produtos');
 const vendasRoutes = require('./routes/vendas');
 const usuariosRoutes = require('./routes/usuarios');
 const keepAlive = require('./routes/keepAlive');
-const backup = require('./backup/googleDriveBackup')
+const backup = require('./routes/backup');
 
 // middlewares //
 app.use(express.json());
