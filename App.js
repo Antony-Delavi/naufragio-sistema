@@ -5,7 +5,6 @@ require('dotenv').config();
 const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
 const https = require('https');
 const SELF_URL = 'https://naufragio.onrender.com/render/keepAlive';
 const cookieParses = require('cookie-parser');
@@ -28,13 +27,6 @@ const sanitize = require('./middleware/sanitize');
 app.use(cors({ origin: 'https://naufragio.onrender.com'}));
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(sanitize)
-app.use(rateLimit({
-  windowMs: 10 * 60 * 1000, 
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-}));
-
 
 // MongoDb Connection //
 mongoose.connect(process.env.MONGO_URI)
@@ -71,7 +63,7 @@ app.get('/inicio', (req, res) => {
 });
 
 
-app.use((req, res, next) => {
+app.use((req, res, next) => { 
   res.status(404).json({ erro: 'Rota não encontrada' });
 });
 
