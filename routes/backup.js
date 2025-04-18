@@ -3,7 +3,7 @@ const router = express.Router();
 const authLogin = require('../middleware/authLogin')
 const fazerBackup = require('../backup/googleDriveBackup')
 
-router.get('/backupProdutos', authLogin, async (req, res) => {
+router.get('/backupProdutos', async (req, res) => {
     try{
       const result = await fazerBackup();
       res.status(result.status === 'succes' ? 200 : 500).json(result);
