@@ -76,7 +76,7 @@ async function fazerBackup() {
     });
 
     // 4. Criar pasta no Google Drive com a data
-    const pastaDriveId = await criarPastaNoDrive(dataHoje, PASTA_ID_DRIVE_MAE);
+    const pastaDriveId = await criarPastaNoDrive(`Produtos ${dataHoje}`, PASTA_ID_DRIVE_MAE);
     logs.push(`📁 Pasta criada no Drive: ${dataHoje} (ID: ${pastaDriveId})`);
 
     // 5. Enviar arquivos da pasta local pro Drive

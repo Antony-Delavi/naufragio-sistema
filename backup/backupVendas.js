@@ -63,7 +63,7 @@ async function fazerBackupVendas() {
 
     // 2. Criar pasta temporária local
     const dataHoje = new Date().toISOString().split('T')[0];
-    const pastaLocal = path.join(__dirname, 'pastasBackupVendas', dataHoje);
+    const pastaLocal = path.join(__dirname, 'pastasBackup', dataHoje);
     fs.mkdirSync(pastaLocal, { recursive: true });
     logs.push(`📁 Pasta local criada: ${pastaLocal}`);
 
@@ -76,7 +76,7 @@ async function fazerBackupVendas() {
     });
 
     // 4. Criar pasta no Google Drive com a data
-    const pastaDriveId = await criarPastaNoDrive(`Vendas_${dataHoje}`, PASTA_ID_DRIVE_MAE);
+    const pastaDriveId = await criarPastaNoDrive(`Vendas ${dataHoje}`, PASTA_ID_DRIVE_MAE);
     logs.push(`📁 Pasta criada no Drive: Vendas_${dataHoje} (ID: ${pastaDriveId})`);
 
     // 5. Enviar arquivos da pasta local pro Drive
