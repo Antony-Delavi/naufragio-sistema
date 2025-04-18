@@ -17,7 +17,7 @@ router.get('/backupProdutos', authLogin, async (req, res) => {
     }
 });
 
-router.get('/backupVendas', async (req, res) => {
+router.get('/backupVendas', authLogin, async (req, res) => {
   try {
     const result = await fazerBackupVendas.fazerBackupVendas();
     res.status(result.status === 'succes' ? 200 : 500).json(result);
