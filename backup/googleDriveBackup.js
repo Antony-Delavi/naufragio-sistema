@@ -4,7 +4,7 @@ const axios = require('axios');
 const { google } = require('googleapis');
 
 // CONFIGURAÇÕES
-const KEYFILEPATH = './drivekeys.json';
+const KEYFILEPATH = '../configs/drivekeys.json';
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 const LISTAR_PRODUTOS_URL = 'https://naufragio.onrender.com/produtos/buscar';
 const PASTA_ID_DRIVE_MAE = '1WSlU6ibhEMI7hd1BUOenMLi3r1CgEEI4';
