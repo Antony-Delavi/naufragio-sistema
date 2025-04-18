@@ -30,7 +30,7 @@
         addLog('📡 Iniciando backup...');
 
         try {
-          const response = await axios.get('https://naufragio.onrender.com/backups/backupProdutos');
+          const response = await axios.get('https://naufragio.onrender.com/backup/backupProdutos');
           const { status, logs: responseLogs, error } = response.data;
 
           if (status === 'success') {

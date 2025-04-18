@@ -5,7 +5,7 @@ const fazerBackup = require('../backup/googleDriveBackup')
 
 router.get('/backupProdutos', async (req, res) => {
     try{
-      const result = await fazerBackup();
+      const result = await fazerBackup.fazerBackup();
       res.status(result.status === 'succes' ? 200 : 500).json(result);
     } catch (err) {
       res.status(500).json({
