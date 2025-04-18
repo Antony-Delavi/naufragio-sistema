@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Backup de Produtos</title>
+  <title>Backup</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.10/babel.min.js"></script>
@@ -119,19 +119,23 @@
         setLogs((prev) => [...prev, message]);
       };
 
-      const startBackup = async () => {
+      const startBackup = async (type) => {
         setIsLoading(true);
         setError(null);
         setLogs([]);
-        addLog('📡 Iniciando backup...');
+        addLog(`📡 Iniciando backup de ${type}...`);
+
+        const url = type === 'produtos'
+          ? 'https://naufragio.onrender.com/backup/backupProdutos'
+          : 'https://naufragio.onrender.com/backup/backupVendas';
 
         try {
-          const response = await axios.get('https://naufragio.onrender.com/backup/backupProdutos');
+          const response = await axios.get(url);
           const { status, logs: responseLogs, error } = response.data;
 
           if (status === 'success') {
             responseLogs.forEach(log => addLog(log));
-            addLog('✅ Backup concluído com sucesso!');
+            addLog(`✅ Backup de ${type} concluído com sucesso!`);
           } else {
             addLog(`❌ Erro no backup: ${error}`);
             setError(error);
@@ -148,20 +152,27 @@
       return (
         <div className="card card-produto">
           <div className="card-body">
-            <h1 className="card-title text-center">Backup de Produtos</h1>
-            <div className="mb-4">
+            <h1 className="card-title text-center">Backup do Sistema</h1>
+            <div className="mb-4 flex flex-col gap-2">
               <button
                 className={`w-full btn ${isLoading ? 'btn-disabled' : 'btn-outline-light'}`}
-                onClick={startBackup}
+                onClick={() => startBackup('produtos')}
                 disabled={isLoading}
               >
-                {isLoading ? 'Executando...' : 'Iniciar Backup'}
+                {isLoading ? 'Executando...' : 'Iniciar Backup de Produtos'}
+              </button>
+              <button
+                className={`w-full btn ${isLoading ? 'btn-disabled' : 'btn-outline-light'}`}
+                onClick={() => startBackup('vendas')}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Executando...' : 'Iniciar Backup de Vendas'}
               </button>
             </div>
             <div className="bg-[#212121] p-4 rounded h-64 overflow-y-auto">
               <h2 className="text-lg font-semibold mb-2 text-[#b0bec5]">Logs</h2>
               {logs.length === 0 ? (
-                <p>Nenhum log ainda. Clique em "Iniciar Backup" para começar.</p>
+                <p>Nenhum log ainda. Clique em um dos botões para começar.</p>
               ) : (
                 logs.map((log, index) => (
                   <p key={index}>{log}</p>
