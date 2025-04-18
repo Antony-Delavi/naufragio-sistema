@@ -4,14 +4,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Backup de Produtos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.10/babel.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+    }
+
+    .card {
+      border: none;
+      border-radius: 0.75rem;
+    }
+
+    .card-produto {
+      background-color: #1f1f1f;
+      transition: transform 0.2s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-produto:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+    }
+
+    .card-body {
+      padding: 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      color: #ffffff;
+    }
+
+    .card-title {
+      color: #00d1ff;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-body p {
+      color: #b0bec5;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-outline-light {
+      border: 1px solid #b0bec5;
+      color: #b0bec5;
+      background-color: transparent;
+    }
+
+    .btn-outline-light:hover {
+      background-color: #b0bec5;
+      color: #121212;
+    }
+
+    .btn-disabled {
+      background-color: #343a40;
+      color: #6c757d;
+      border: none;
+      cursor: not-allowed;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        padding: 0.5rem;
+      }
+
+      .card-body {
+        padding: 0.75rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .card-body p {
+        font-size: 0.85rem;
+      }
+
+      .btn {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-  <div id="root"></div>
+<body>
+  <div class="container">
+    <div id="root"></div>
+  </div>
 
   <script type="text/babel">
     function BackupApp() {
@@ -50,33 +146,31 @@
       };
 
       return (
-        <div className="max-w-2xl w-full bg-white p-8 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold mb-6 text-center">Backup de Produtos</h1>
-          
-          <div className="mb-4">
-            <button
-              className={`w-full py-2 px-4 rounded text-white ${
-                isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
-              }`}
-              onClick={startBackup}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Executando...' : 'Iniciar Backup'}
-            </button>
-          </div>
-
-          <div className="bg-gray-100 p-4 rounded h-64 overflow-y-auto">
-            <h2 className="text-lg font-semibold mb-2">Logs</h2>
-            {logs.length === 0 ? (
-              <p className="text-gray-500">Nenhum log ainda. Clique em "Iniciar Backup" para começar.</p>
-            ) : (
-              logs.map((log, index) => (
-                <p key={index} className="text-sm text-gray-700">{log}</p>
-              ))
-            )}
-            {error && (
-              <p className="text-sm text-red-600 mt-2">Erro: {error}</p>
-            )}
+        <div className="card card-produto">
+          <div className="card-body">
+            <h1 className="card-title text-center">Backup de Produtos</h1>
+            <div className="mb-4">
+              <button
+                className={`w-full btn ${isLoading ? 'btn-disabled' : 'btn-outline-light'}`}
+                onClick={startBackup}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Executando...' : 'Iniciar Backup'}
+              </button>
+            </div>
+            <div className="bg-[#212121] p-4 rounded h-64 overflow-y-auto">
+              <h2 className="text-lg font-semibold mb-2 text-[#b0bec5]">Logs</h2>
+              {logs.length === 0 ? (
+                <p>Nenhum log ainda. Clique em "Iniciar Backup" para começar.</p>
+              ) : (
+                logs.map((log, index) => (
+                  <p key={index}>{log}</p>
+                ))
+              )}
+              {error && (
+                <p className="text-sm text-red-400 mt-2">Erro: {error}</p>
+              )}
+            </div>
           </div>
         </div>
       );
