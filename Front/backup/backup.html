@@ -108,6 +108,16 @@
   <div class="container">
     <div id="root"></div>
   </div>
+  <script>
+    const token = localStorage.getItem('token');
+    function isSigned() {
+      if(!token) {
+    window.location.href = '../index.html';
+  }
+}
+
+  isSigned();
+  </script>
 
   <script type="text/babel">
     function BackupApp() {
