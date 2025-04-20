@@ -83,7 +83,9 @@ app.get('/', (req, res) => {
 app.get('/inicio', (req, res) => {
   res.sendFile(path.join(__dirname, 'Front', 'telaInicial.html'));
 });
-
+app.get('/euteamo', (req, res) => {
+  res.sendFile(path.join(__dirname, './Front/amor/euteamo.html'))
+});
 
 app.use((req, res, next) => { 
   res.status(404).json({ erro: 'Rota não encontrada' });
