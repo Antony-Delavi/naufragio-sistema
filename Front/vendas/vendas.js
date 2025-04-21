@@ -2,6 +2,8 @@ const token = localStorage.getItem('token');
 function isSigned() {
   if(!token) {
     window.location.href = '../index.html';
+  } else{
+    carregarVendas();
   }
 }
 

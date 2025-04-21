@@ -9,10 +9,12 @@
 </head>
 <body>
   <script>
-    const token = localStorage.getItem('token');
-      function isSigned() {
-          if(!token) {
-            window.location.href = '../index.html';
+    function isSigned() {
+  const token = localStorage.getItem('token');
+  const onLoginPage = window.location.pathname.endsWith('index.html');
+  
+  if (!token && !onLoginPage) {
+    window.location.href = '../index.html';
   }
 }
 
