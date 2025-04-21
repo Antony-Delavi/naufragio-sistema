@@ -1,3 +1,8 @@
+const token = localStorage.getItem('token');
+
+if (!token) {
+  window.location.href = '../index.html'; // ajuste o caminho se necessário
+}
 const produtosDisponiveis = document.getElementById('produtos-disponiveis');
 const produtosIndisponiveis = document.getElementById('produtos-indisponiveis');
 const searchInput = document.getElementById('searchInput');

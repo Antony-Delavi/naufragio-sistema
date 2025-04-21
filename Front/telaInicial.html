@@ -119,7 +119,13 @@
       </div>
     </div>
   </div>
+  <script>
+    const token = localStorage.getItem('token');
 
+if (!token) {
+  window.location.href = '../index.html'; // ajuste o caminho se necessário
+}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
