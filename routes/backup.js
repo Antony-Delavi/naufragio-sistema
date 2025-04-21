@@ -30,4 +30,16 @@ router.get('/backupVendas', authLogin, async (req, res) => {
   }
 });
 
+router.get('/backup/backupVendas', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const expectedToken = `Bearer ${process.env.BACKUP_SECRET}`;
+
+  if (!authHeader || authHeader !== expectedToken) {
+    return res.status(401).json({ erro: 'Não autorizado' });
+  }
+
+  const resultado = await fazerBackupVendas();
+  res.status(200).json(resultado);
+});
+
 module.exports = router;
