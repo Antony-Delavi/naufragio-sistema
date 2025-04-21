@@ -1,9 +1,3 @@
-const token = localStorage.getItem('token');
-
-if (!token) {
-  window.location.href = '../index.html'; // ajuste o caminho se necessário
-}
-
 document.getElementById("form-produto").addEventListener("submit", async function(e) {
   e.preventDefault();
 

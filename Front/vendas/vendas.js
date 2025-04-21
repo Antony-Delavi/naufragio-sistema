@@ -1,8 +1,3 @@
-const token = localStorage.getItem('token');
-
-if (!token) {
-  window.location.href = '../index.html'; // ajuste o caminho se necessário
-}
 const container = document.getElementById('vendas-container');
 const resumos = document.getElementById('resumos');
 const filtroInput = document.getElementById('filtro-vendas');

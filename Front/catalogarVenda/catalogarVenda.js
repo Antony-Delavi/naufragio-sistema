@@ -1,9 +1,3 @@
-const token = localStorage.getItem('token');
-
-if (!token) {
-  window.location.href = '../index.html'; // ajuste o caminho se necessário
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const inputProduto = document.getElementById('nomeProduto');
     const inputValor = document.getElementById('valorProduto');

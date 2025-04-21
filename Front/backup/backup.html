@@ -109,11 +109,6 @@
     <div id="root"></div>
   </div>
   <script type="text/babel">
-    const token = localStorage.getItem('token');
-
-if (!token) {
-  window.location.href = '../index.html'; // ajuste o caminho se necessário
-}
     function BackupApp() {
       const [logs, setLogs] = React.useState([]);
       const [isLoading, setIsLoading] = React.useState(false);
