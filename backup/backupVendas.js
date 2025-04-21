@@ -63,13 +63,13 @@ async function fazerBackupVendas() {
 
     // 2. Criar pasta temporária local
     const dataHoje = new Date().toISOString().split('T')[0];
-    const pastaLocal = path.join(__dirname, 'pastasBackup', dataHoje);
+    const pastaLocal = path.join(__dirname, 'pastasBackupVendas', dataHoje);
     fs.mkdirSync(pastaLocal, { recursive: true });
     logs.push(`📁 Pasta local criada: ${pastaLocal}`);
 
     // 3. Criar arquivos .txt para cada venda
     vendas.forEach((venda, i) => {
-      const nomeArquivo = `${venda.id || 'venda'}_${i + 1}.txt`;
+      const nomeArquivo = `venda_${venda._id || i + 1}.txt`;
       const caminho = path.join(pastaLocal, nomeArquivo);
       fs.writeFileSync(caminho, JSON.stringify(venda, null, 2), 'utf-8');
       logs.push(`📄 Arquivo criado: ${nomeArquivo}`);
@@ -77,7 +77,7 @@ async function fazerBackupVendas() {
 
     // 4. Criar pasta no Google Drive com a data
     const pastaDriveId = await criarPastaNoDrive(`Vendas ${dataHoje}`, PASTA_ID_DRIVE_MAE);
-    logs.push(`📁 Pasta criada no Drive: Vendas_${dataHoje} (ID: ${pastaDriveId})`);
+    logs.push(`📁 Pasta criada no Drive: Vendas ${dataHoje} (ID: ${pastaDriveId})`);
 
     // 5. Enviar arquivos da pasta local pro Drive
     const arquivos = fs.readdirSync(pastaLocal);

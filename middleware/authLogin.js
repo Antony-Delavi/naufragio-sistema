@@ -14,4 +14,4 @@ function verifyLogin(req, res, next) {
   }
 }
 
-module.exports =verifyLogin;
+module.exports = verifyLogin;
