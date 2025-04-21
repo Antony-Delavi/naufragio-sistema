@@ -1,12 +1,3 @@
-const token = localStorage.getItem('token');
-function isSigned() {
-  if(!token) {
-    window.location.href = '../index.html';
-  }
-}
-
-isSigned();
-
 document.getElementById("form-produto").addEventListener("submit", async function(e) {
   e.preventDefault();
 

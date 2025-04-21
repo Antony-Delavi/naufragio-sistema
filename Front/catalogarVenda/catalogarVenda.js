@@ -1,12 +1,3 @@
-const token = localStorage.getItem('token');
-function isSigned() {
-  if(!token) {
-    window.location.href = '../index.html';
-  }
-}
-
-isSigned();
-
 document.addEventListener('DOMContentLoaded', () => {
     const inputProduto = document.getElementById('nomeProduto');
     const inputValor = document.getElementById('valorProduto');

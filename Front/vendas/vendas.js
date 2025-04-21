@@ -1,14 +1,3 @@
-const token = localStorage.getItem('token');
-function isSigned() {
-  if(!token) {
-    window.location.href = '../index.html';
-  } else{
-    carregarVendas();
-  }
-}
-
-isSigned();
-
 const container = document.getElementById('vendas-container');
 const resumos = document.getElementById('resumos');
 const filtroInput = document.getElementById('filtro-vendas');

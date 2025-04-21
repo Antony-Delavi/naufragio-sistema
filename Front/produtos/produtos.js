@@ -1,12 +1,3 @@
-const token = localStorage.getItem('token');
-function isSigned() {
-  if(!token) {
-    window.location.href = '../index.html';
-  }
-}
-
-isSigned();
-
 const produtosDisponiveis = document.getElementById('produtos-disponiveis');
 const produtosIndisponiveis = document.getElementById('produtos-indisponiveis');
 const searchInput = document.getElementById('searchInput');
