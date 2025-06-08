@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dados.desconto = dados.desconto ? parseFloat(dados.desconto) : 0;
   
     try {
-      const resposta = await fetch('https://naufragio.onrender.com/vendas/criar', {
+      const resposta = await fetch('https://sistema-loja-fvgq.onrender.com/vendas/criar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
