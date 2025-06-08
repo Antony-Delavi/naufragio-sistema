@@ -6,7 +6,7 @@ const filtroTipo = document.getElementById('filtro-tipo');
 let vendasOriginais = [];
 
 function carregarVendas() {
-  fetch('https://naufragio.onrender.com/vendas/buscarvendas')
+  fetch('https://sistema-loja-fvgq.onrender.com//vendas/buscarvendas')
     .then(res => res.json())
     .then(vendas => {
       console.log('Vendas recebidas:', vendas);

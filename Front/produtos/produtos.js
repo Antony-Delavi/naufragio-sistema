@@ -5,7 +5,7 @@ const searchInput = document.getElementById('searchInput');
 let produtos = [];
 
 function carregarProdutos() {
-  fetch('https://naufragio.onrender.com/produtos/buscar')
+  fetch('https://sistema-loja-fvgq.onrender.com//produtos/buscar')
     .then(res => res.json())
     .then(data => {
       produtos = data;

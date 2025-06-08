@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let produtos = [];
   
     // Carregar produtos disponíveis
-    fetch('https://naufragio.onrender.com/produtos/buscar')
+    fetch('https://sistema-loja-fvgq.onrender.com/produtos/buscar')
       .then(res => res.json())
       .then(data => {
         produtos = data.filter(p => p.disponivel);

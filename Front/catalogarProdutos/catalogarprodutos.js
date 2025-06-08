@@ -21,7 +21,7 @@ document.getElementById("form-produto").addEventListener("submit", async functio
   }
 
   try {
-    const resposta = await fetch('https://naufragio.onrender.com/produtos/criar', {
+    const resposta = await fetch('https://sistema-loja-fvgq.onrender.com/produtos/criar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

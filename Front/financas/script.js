@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let vendasOriginais = [];
 
   // URL base da API
-  const API_BASE_URL = 'https://naufragio.onrender.com/vendas';
+  const API_BASE_URL = 'https://sistema-loja-fvgq.onrender.com/vendas';
   // const API_BASE_URL = 'http://localhost:3000/vendas'; // Descomente para testes locais
 
   // Formata Date para YYYY-MM-DD
